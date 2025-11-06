@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class MainMenu {
 
-    private String userFilePath;
-    private String movieFilePath;
-    private String seriesFilePath;
+    private String userFilePath = "users.csv";
+    private String movieFilePath = "movies.csv";
+    private String seriesFilePath = "series.csv";
     private ArrayList<Movie> movieList;
     private ArrayList<Series> seriesList;
     private ArrayList<User> users;
