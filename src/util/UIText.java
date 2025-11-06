@@ -12,17 +12,40 @@ public class UIText {
     }
 
     public int promptNumeric(String msg){
-        displayMsg(msg);
-        String input = scanner.nextLine();
-        int numInput = Integer.parseInt(input);
-
-        return numInput;
+        while(true){
+            displayMsg(msg);
+            try {
+                String input = scanner.nextLine();
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e){
+                displayMsg("Invalid number, you need to try again!");
+            }
+        }
     }
+
+    public double promptDouble(String msg){
+        while(true){
+            displayMsg(msg);
+            try {
+                String input = scanner.nextLine();
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e){
+                displayMsg("Invalid number, you need to try again!");
+            }
+        }
+    }
+
+
 
 
     public String promptText(String msg){
         displayMsg(msg);
         String input = scanner.nextLine();
+
+        while (input.isEmpty()){
+            System.out.println("You must enter something!");
+            input = scanner.nextLine();
+        }
 
         return input;
     }
