@@ -1,3 +1,5 @@
+import util.UIText;
+
 import java.util.ArrayList;
 
 public class MainMenu {

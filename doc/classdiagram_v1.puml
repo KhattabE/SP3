@@ -28,7 +28,6 @@ class MainMenu {
 
 class UIText {
         Scanner scanner;
-        +UIText();
         +void displayMsg(String msg);
         +int promptNumeric(String msg);
         +String promptText(String msg);
