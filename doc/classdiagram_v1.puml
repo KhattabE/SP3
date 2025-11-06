@@ -35,12 +35,12 @@ class UIText {
 }
 
 class FileIO {
-    +static ArrayList<User> loadUsers(String filepath);
-    +static void saveUsers(String filepath, ArrayList<User> users);
-    +static ArrayList<Medie> loadMovies(String filepath, GenreManager gm);
-    +static ArrayList<Medie> loadSeries(String filepath, GenreManager gm);
-    +static void saveUserLists(String folderPath, User user);
-    +static void loadUserLists(String folderPath, User user, ArrayList<Medie> allMedia);
+    +ArrayList<User> loadUsers(String filepath);
+    +void saveUsers(String filepath, ArrayList<User> users);
+    +ArrayList<Medie> loadMovies(String filepath, GenreManager gm);
+    +ArrayList<Medie> loadSeries(String filepath, GenreManager gm);
+    +void saveUserLists(String folderPath, User user);
+    +void loadUserLists(String folderPath, User user, ArrayList<Medie> allMedia);
 }
 
 interface MediePlay {

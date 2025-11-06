@@ -1,5 +1,7 @@
 package app;
 
+import app.util.UIText;
+
 import java.util.ArrayList;
 
 public class MainMenu {
