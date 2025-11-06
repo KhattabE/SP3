@@ -1,4 +1,4 @@
-import util.UIText;
+package app;
 
 import java.util.ArrayList;
 

@@ -1,3 +1,5 @@
+package app;
+
 public class Genre {
     private String genreName;
     private String genreDescription;
