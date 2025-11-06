@@ -15,7 +15,8 @@ public class Genre {
         return genreDescription;
     }
 
-    String toString(){
-
+    @Override
+    public String toString(){
+        return genreName + " (" + genreDescription + ")";
     }
 }

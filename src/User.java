@@ -29,15 +29,15 @@ public class User{
     }
 
     public void addToList(String listName, Medie media){
-        // Adds to a List
+        // Adds a Media to the selected list (seenList, favoriteList, or continueList)
     }
 
     public void removeFromList(String listName, Medie media){
-        // Removes from a list
+        // Removes a Media from the selected list (seenList, favoriteList, or continueList)
     }
 
     public void viewList(String listName){
-        // Lets the user view a list
+        // Displays all Media in the selected list (seenList, favoriteList, or continueList)
     }
 
 

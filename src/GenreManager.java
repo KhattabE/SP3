@@ -9,12 +9,12 @@ public class GenreManager {
     }
 
     public void addGenre(Genre genre){
-        // Add a genre
+        genreList.add(genre);
+
     }
 
     public ArrayList<Genre> getAllGenres(){
-        return 0;
-       // Show all genres
+        return genreList;
     }
 
     public Genre getGenreByName(String name){
