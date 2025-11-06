@@ -55,7 +55,7 @@ public abstract class Media {
 
 
     public String toFileString(){
-        return 0;
+        return "";
 
         // Sends to file
     }
