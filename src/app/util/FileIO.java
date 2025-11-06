@@ -27,6 +27,39 @@ public class FileIO {
 
 
 
+    public ArrayList<User> loadUsers(String filePath){
+
+        String line;
+        ArrayList<User> users = new ArrayList<>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            while((line = reader.readLine()) != null){
+
+                String[] row = line.split(";");
+
+                if (row.length == 3) {
+                    users.add(new User(row[0], row[1], row[2]));
+                }
+            }
+            reader.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File could not be located!");
+        } catch (IOException e) {
+            System.out.println("An error has happened!");
+        }
+
+        return users;
+
+    }
+
+
+
+
+
+
+
 
 
 
