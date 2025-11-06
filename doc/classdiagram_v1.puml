@@ -1,0 +1,177 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Main{
+    +static void main(String[] args)
+}
+
+
+class MainMenu {
+    -String userFilePath;
+    -String movieFilePath;
+    -String seriesFilePath;
+    + MainMenu(String userFilePath, String movieFilePath, String seriesFilePath);
+    -ArrayList<Movie> movieList;
+    -ArrayList<Series> seriesList;
+    -ArrayList<User> users;
+    -User currentUser;
+    -UIText ui;
+
+    +void show();
+    +void login();
+    +void createAccount();
+    +void loadUsersFromFile();
+    +void saveUsersToFile();
+    +void showUserMenu();
+}
+
+class UIText {
+        Scanner scanner;
+        +UIText();
+        +void displayMsg(String msg);
+        +int promptNumeric(String msg);
+        +String promptText(String msg);
+        +boolean promptBinary(String msg);
+}
+
+class FileIO {
+    +static ArrayList<User> loadUsers(String filepath);
+    +static void saveUsers(String filepath, ArrayList<User> users);
+    +static ArrayList<Medie> loadMovies(String filepath, GenreManager gm);
+    +static ArrayList<Medie> loadSeries(String filepath, GenreManager gm);
+    +static void saveUserLists(String folderPath, User user);
+    +static void loadUserLists(String folderPath, User user, ArrayList<Medie> allMedia);
+}
+
+interface MediePlay {
+    +void medieIsPlaying();
+}
+
+interface MediePause {
+    +void medieIsPaused();
+}
+
+interface MedieEnd {
+    +void medieIsEnded();
+}
+
+abstract class Medie {
+    -String title;
+    -ArrayList<Genre> genres;
+    -int releaseYear;
+    -double rating;
+    -ArrayList<User> usersWhoHaveSeen;
+
+    +Medie(String title, ArrayList<Genre> genres, int releaseYear, double rating);
+
+    +String getTitle();
+    +ArrayList<Genre> getGenres();
+    +int getReleaseYear();
+    +double getRating();
+    +void setRating(double rating);
+    +void displayInfo();
+    +boolean matchesGenre(String genre);
+    +boolean matchesTitle(String title);
+    +String toFileString();
+}
+class Movie {
+    -int movieLength;
+
+    +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, int movieLength);
+    +void displayInfo();
+    +String toFileString();
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
+    +int getMovieLength();
+    +void setMovieLength(int length);
+    +boolean isLongMovie();
+    +boolean isRatedAbove(double threshold);
+}
+
+class Series {
+    -int seasons;
+    -int episodes;
+    -int episodeLength;
+    +Series(String title, ArrayList<Genre> genres, int releaseYear, double rating, int seasons, int episodes, int episodeLength);
+    +void displayInfo();
+    +String toFileString();
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
+    +int getSeasons();
+    +int getEpisodes();
+    +int getEpisodeLength();
+    +void setSeasons(int seasons);
+    +void setEpisodes(int episodes);
+    +void setEpisodeLength(int length);
+    +boolean isMiniSeries();
+    +boolean isRatedAbove(double threshold);
+}
+
+class User {
+    -String name;
+    -String mail;
+    -String code;
+    -ArrayList<Medie> seenList;
+    -ArrayList<Medie> favoriteList;
+    -ArrayList<Medie> continueList;
+    +User(String name, String mail, String code);
+    +String getName();
+    +String getMail();
+    +String getCode();
+    +void addToList(String listName, Medie media);
+    +void removeFromList(String listName, Medie media);
+    +void viewList(String listName);
+}
+
+class Genre {
+    -String genreName;
+    -String genreDescription;
+    +Genre(String genreName, String genreDescription);
+    +String getName();
+    +String getDescription();
+    +void setDescription(String description);
+    +String toString();
+}
+
+class GenreManager {
+    -ArrayList<Genre> genreList;
+    +GenreManager(ArrayList<Genre> genreList);
+    +void addGenre(Genre genre);
+    +ArrayList<Genre> getAllGenres();
+    +Genre getGenreByName(String name);
+    +void printGenres();
+}
+
+' IS-A relationships
+Medie <|-- Movie
+Medie <|-- Series
+
+Movie ..|> MediePlay
+Movie ..|> MediePause
+Movie ..|> MedieEnd
+
+Series ..|> MediePlay
+Series ..|> MediePause
+Series ..|> MedieEnd
+
+' HAS-A relationships
+MainMenu o-- User
+MainMenu o-- UIText
+MainMenu o-- Movie
+MainMenu o-- Series
+MainMenu o-- GenreManager
+
+User o-- Medie
+Medie *-- Genre
+Medie o-- User
+
+GenreManager *-- Genre
+
+FileIO --> Medie
+Main o-- MainMenu
+
+
+
+@enduml
