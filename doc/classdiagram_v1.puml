@@ -86,7 +86,7 @@ class Movie {
     +int getMovieLength();
     +void setMovieLength(int length);
     +boolean isLongMovie();
-    +boolean isRatedAbove(double threshold);
+    +boolean isRatedAbove(double isRating);
 }
 
 class Series {
@@ -106,7 +106,7 @@ class Series {
     +void setEpisodes(int episodes);
     +void setEpisodeLength(int length);
     +boolean isMiniSeries();
-    +boolean isRatedAbove(double threshold);
+    +boolean isRatedAbove(double isRating);
 }
 
 class User {
