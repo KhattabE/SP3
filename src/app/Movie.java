@@ -1,8 +1,14 @@
 package app;
 
+import app.util.UIText;
+
 import java.util.ArrayList;
 
 public class Movie extends Media  {
+
+    //UIText object, so we can use them instead of "System.out.print"
+    UIText ui = new UIText();
+
 
     //Class field
     private double movieLength;
@@ -40,6 +46,27 @@ public class Movie extends Media  {
     @Override
     public void medieIsEnded(){
         ui.displayMsg("The movie has been ended...");
+    }
+
+    //Method that will check if the movie is a long movie
+    public boolean isLongMovie(){
+        if(movieLength > 120){
+            ui.displayMsg("This is a long movie!");
+            return true;
+        }
+            ui.displayMsg("This is an average length movie!");
+        return false;
+
+    }
+
+    //Method that will check if the movie is a short movie
+    public boolean isShortMovie(){
+        if(movieLength <= 40){
+            ui.displayMsg("This is a short movie!");
+            return true;
+        }
+        ui.displayMsg("This is not a short movie!");
+        return false;
     }
 
 
