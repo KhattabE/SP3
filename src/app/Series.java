@@ -6,7 +6,6 @@ public class Series extends Media  {
 
 
 
-
     @Override
     public void medieIsPlaying(){
         ui.displayMsg("The series is now playing...");

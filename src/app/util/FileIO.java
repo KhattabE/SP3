@@ -1,6 +1,7 @@
 package app.util;
 
 import app.GenreManager;
+import app.Media;
 import app.User;
 
 
@@ -58,11 +59,7 @@ public class FileIO {
     }
 
 
-    public ArrayList<Medie> loadMovies(String filePath, GenreManager gm){
 
-
-
-    }
 
 
 

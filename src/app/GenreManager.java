@@ -20,7 +20,7 @@ public class GenreManager {
     }
 
     public Genre getGenreByName(String name){
-        // Find genre by name
+
     }
 
     public void printGenres(){
