@@ -1,8 +1,11 @@
 package app.util;
 
+import app.GenreManager;
 import app.User;
 
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -55,6 +58,11 @@ public class FileIO {
     }
 
 
+    public ArrayList<Medie> loadMovies(String filePath, GenreManager gm){
+
+
+
+    }
 
 
 

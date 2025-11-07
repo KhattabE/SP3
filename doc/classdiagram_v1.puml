@@ -63,12 +63,6 @@ abstract class Medie {
     -ArrayList<User> usersWhoHaveSeen;
 
     +Medie(String title, ArrayList<Genre> genres, int releaseYear, double rating);
-
-    +void displayInfo();
-    +String toFileString();
-    +void medieIsPlaying();
-    +void medieIsPaused();
-    +void medieIsEnded();
     +String getTitle();
     +ArrayList<Genre> getGenres();
     +int getReleaseYear();
@@ -77,6 +71,9 @@ abstract class Medie {
     +void displayInfo();
     +boolean matchesGenre(String genre);
     +boolean matchesTitle(String title);
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
     +String toFileString();
 }
 class Movie {
