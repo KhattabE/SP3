@@ -56,6 +56,20 @@ public abstract class Media {
         return false;
     }
 
+    // Method for checking if the media title contains the given search string (This will be used for title search)
+    public boolean matchesTitle(String titles){
+
+        if (this.title.toLowerCase().contains(titles.toLowerCase())){ //This will even match, if you write "Titan" instead of "Titanic"
+            ui.displayMsg("Title match found!");
+            return true;
+        }
+
+        ui.displayMsg("No title match found!");
+        return false;
+    }
+
+
+
 
 
 
