@@ -38,6 +38,9 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
         return releaseYear;
     }
 
+    public double getRating() {
+        return rating;
+    }
 
     //Setter to make the fields writable
     public void setRating(double rating) {
@@ -85,12 +88,10 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
                 genreList += ", ";
             }
         }
-        ui.displayMsg(
-                "Media Title: " + this.title +
+        ui.displayMsg("Media Title: " + this.title +
                         "\nMedia Release Year: " + this.releaseYear +
                         "\nMedia Rating: " + this.rating +
-                        "\nMedia Genres: " + genreList
-        );
+                        "\nMedia Genres: " + genreList);
     }
 
 

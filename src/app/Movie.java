@@ -70,8 +70,45 @@ public class Movie extends Media  {
     }
 
 
+    // Method to check if the movie rating is above a given value
+    public boolean isRatedAbove(double isRating){
+
+        // If the movies rating is higher than the given value
+        if (this.getRating() > isRating){
+            //This will show a message saying that the movie is rated above the given value
+            ui.displayMsg("This movie is rated above " + isRating);
+            return true;
+        }
+        //This will show a massage if the movie rating is not higher than the given value
+        ui.displayMsg("This movie is NOT rated above " + isRating);
+        return false;
+    }
 
 
+    @Override
+    public void displayInfo() {
+
+        //Just a variable to collect all genre names
+        String genreList = "";
+
+        // For loop to loop through each genre in the list
+        for (int i = 0; i < getGenres().size(); i++) {
+
+            //This will add the genre name to the genreList string
+            genreList += getGenres().get(i).getGenreName();
+
+            //This will make sure if this is not the last genre, it will add a comma and space
+            if (i < getGenres().size() - 1) {
+                genreList += ", ";
+            }
+        }
+        ui.displayMsg("Movie Title: " + this.getTitle() +
+                        "\nMovie Release Year: " + this.getReleaseYear() +
+                        "\nMovie Rating: " + this.getRating() +
+                        "\nMovie Genres: " + genreList +
+                        "\nMovie length: " + this.movieLength);
+
+    }
 
 
 }
