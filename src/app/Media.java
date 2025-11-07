@@ -94,8 +94,28 @@ public abstract class Media {
     }
 
 
+    public String toFileString() {
+
+        //we start with title and release year, separated by semicolon
+        String fileLine = title + ";" + releaseYear + ";";
+
+        //this loops through each genre and add the genre name to the line
+        for (Genre g : genres) {
+            fileLine += g.getGenreName() + ";";
+        }
+
+        //this adds the rating at the end followed by semicolon
+        fileLine += rating + ";";
+
+        //This returns the full line
+        return fileLine;
+
+    }
 
 
 
 
-}
+
+
+
+    }
