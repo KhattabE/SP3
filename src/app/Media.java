@@ -2,7 +2,6 @@ package app;
 
 import app.util.UIText;
 
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 
 public abstract class Media implements MedieFunctions {

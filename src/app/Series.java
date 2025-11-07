@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 public class Series extends Media  {
 
-
+    public Series(String title, ArrayList<String> genres, int releaseYear, double rating) {
+        super(title, genres, releaseYear, rating);
+    }
 
     @Override
     public void medieIsPlaying(){

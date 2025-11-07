@@ -13,13 +13,13 @@ public class Movie extends Media  {
     //Class field
     private double movieLength;
 
-
     //Class Constructor
-    public Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, double movieLength) {
-        //Super keyword to inherit the fields from the parent class
+    public Movie(String title, ArrayList<String> genres, int releaseYear, double rating, UIText ui, double movieLength) {
         super(title, genres, releaseYear, rating);
+        this.ui = ui;
         this.movieLength = movieLength;
     }
+
 
 
     //Getters
