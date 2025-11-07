@@ -24,7 +24,14 @@ public class MainMenu {
 
 
     public void show(){
-        // Display the welcome screen
+        ui.displayMsg("Welcome to the streaming service Amandu-Entertainments!");
+        ui.displayMsg("You got the following options you can choose from: ");
+        ui.displayMsg("1: Login");
+        ui.displayMsg("2: Create an account");
+        ui.promptNumeric("Enter your choice (1: Login, 2: Create an account:) ");
+
+
+
     }
 
     public void login(){

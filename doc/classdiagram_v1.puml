@@ -37,10 +37,10 @@ class UIText {
 class FileIO {
     +ArrayList<User> loadUsers(String filepath);
     +void saveUsers(String filepath, ArrayList<User> users);
-    +ArrayList<Medie> loadMovies(String filepath, GenreManager gm);
-    +ArrayList<Medie> loadSeries(String filepath, GenreManager gm);
+    +ArrayList<Media> loadMovies(String filepath, GenreManager gm);
+    +ArrayList<Media> loadSeries(String filepath, GenreManager gm);
     +void saveUserLists(String folderPath, User user);
-    +void loadUserLists(String folderPath, User user, ArrayList<Medie> allMedia);
+    +void loadUserLists(String folderPath, User user, ArrayList<Media> allMedia);
 }
 
 interface MediePlay {
@@ -105,15 +105,15 @@ class User {
     -String name;
     -String mail;
     -String code;
-    -ArrayList<Medie> seenList;
-    -ArrayList<Medie> favoriteList;
-    -ArrayList<Medie> continueList;
+    -ArrayList<Media> seenList;
+    -ArrayList<Media> favoriteList;
+    -ArrayList<Media> continueList;
     +User(String name, String mail, String code);
     +String getName();
     +String getMail();
     +String getCode();
-    +void addToList(String listName, Medie media);
-    +void removeFromList(String listName, Medie media);
+    +void addToList(String listName, Media media);
+    +void removeFromList(String listName, Media media);
     +void viewList(String listName);
 }
 
