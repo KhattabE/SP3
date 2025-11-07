@@ -2,55 +2,29 @@ package app;
 
 import java.util.ArrayList;
 
-public class Series extends Media {
+public class Series extends Media implements MediePlay, MediePause, MedieEnd {
 
-    private int seasons;
-    private int episodes;
-    private double episodeLength;
 
-    public Series(String title, ArrayList<Genre> genres, int releaseYear, double rating, int seasons, int episodes, double episodeLenght) {
-        super(title, genres, releaseYear, rating);
-        this.seasons = seasons;
-        this.episodes = episodes;
-        this.episodeLength = episodeLength;
+
+
+    @Override
+    public void medieIsPlaying(){
+        ui.displayMsg("The series is now playing...");
+    }
+
+    @Override
+    public void medieIsPaused(){
+        ui.displayMsg("The series has been paused...");
+    }
+
+    @Override
+    public void medieIsEnded(){
+        ui.displayMsg("The series has been ended...");
     }
 
 
-    public int getSeasons(){
-        // Getter for showing seasons
-        return 0;
-    }
 
-    public int getEpisodes(){
-        // Getter for showing episodes
-        return 0;
-    }
 
-    public int getEpisodeLength(){
-        // Getter for showing episode length
-        return 0;
-    }
 
-    public void setSeasons(int seasons){
-        // set seasons
-    }
-
-    public void setEpisodes(int episodes){
-        // set episodes
-    }
-
-    public void setEpisodeLength(int length){
-        // set episode length
-    }
-
-    public boolean isMiniSeries(){
-        // true if this is a mini series
-        return true;
-    }
-
-    public boolean isRatedAbove(double isRating){
-        // true if this is rated above x
-        return true;
-    }
 
 }

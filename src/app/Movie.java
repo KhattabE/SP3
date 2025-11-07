@@ -2,32 +2,27 @@ package app;
 
 import java.util.ArrayList;
 
-public class Movie extends Media  {
-    private int movieLength;
+public class Movie extends Media implements MediePlay, MediePause, MedieEnd  {
 
-    public Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, int movieLength) {
-        super(title, genres, releaseYear, rating);
-        this.movieLength = movieLength;
+
+    @Override
+    public void medieIsPlaying(){
+        ui.displayMsg("The movie is now playing...");
     }
 
-    public int getMovieLength(){
-        // Shows the movies length
-        return 0;
+    @Override
+    public void medieIsPaused(){
+        ui.displayMsg("The movie has been paused...");
     }
 
-    public void setMovieLength(int length){
-        // Sets movie length
+    @Override
+    public void medieIsEnded(){
+        ui.displayMsg("The movie has been ended...");
     }
 
-    public boolean isLongMovie(){
-        return true;
-        // If movie is x long then true
-    }
 
-    public boolean isRatedAbove(double isRating){
-        return true;
 
-        // If rating is x then true
 
-    }
+
+
 }
