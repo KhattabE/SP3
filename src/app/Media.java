@@ -18,6 +18,26 @@ public abstract class Media {
         this.rating = rating;
     }
 
+    public void displayInfo(){
+        //displays the info
+    }
+
+    public String toString(){
+        return "";
+    }
+
+    public void mediaIsPlaying(){
+        // Medie is playing
+    }
+
+    public void mediaIsPaused(){
+        // Media is paused
+    }
+
+    public void mediaIsEnded(){
+        // Media is ended
+    }
+
     public String getTitle() {
         return title;
     }
@@ -36,10 +56,6 @@ public abstract class Media {
 
     public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public void displayInfo(){
-        // Displays the info
     }
 
     public boolean matchesGenre(String genre){

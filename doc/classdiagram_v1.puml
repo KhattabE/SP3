@@ -64,6 +64,11 @@ abstract class Medie {
 
     +Medie(String title, ArrayList<Genre> genres, int releaseYear, double rating);
 
+    +void displayInfo();
+    +String toFileString();
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
     +String getTitle();
     +ArrayList<Genre> getGenres();
     +int getReleaseYear();
@@ -78,11 +83,6 @@ class Movie {
     -int movieLength;
 
     +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, int movieLength);
-    +void displayInfo();
-    +String toFileString();
-    +void medieIsPlaying();
-    +void medieIsPaused();
-    +void medieIsEnded();
     +int getMovieLength();
     +void setMovieLength(int length);
     +boolean isLongMovie();
@@ -92,13 +92,8 @@ class Movie {
 class Series {
     -int seasons;
     -int episodes;
-    -int episodeLength;
+    -double episodeLength;
     +Series(String title, ArrayList<Genre> genres, int releaseYear, double rating, int seasons, int episodes, int episodeLength);
-    +void displayInfo();
-    +String toFileString();
-    +void medieIsPlaying();
-    +void medieIsPaused();
-    +void medieIsEnded();
     +int getSeasons();
     +int getEpisodes();
     +int getEpisodeLength();
