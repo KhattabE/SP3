@@ -69,6 +69,30 @@ public abstract class Media {
     }
 
 
+    public void displayInfo() {
+
+        //Just a variable to collect all genre names
+        String genreList = "";
+
+        // For loop to loop through each genre in the list
+        for (int i = 0; i < genres.size(); i++) {
+
+            //This will add the genre name to the genreList string
+            genreList += genres.get(i).getGenreName();
+
+            //This will make sure if this is not the last genre, it will add a comma and space
+            if (i < genres.size() - 1) {
+                genreList += ", ";
+            }
+        }
+        ui.displayMsg(
+                "Media Title: " + this.title +
+                        "\nMedia Release Year: " + this.releaseYear +
+                        "\nMedia Rating: " + this.rating +
+                        "\nMedia Genres: " + genreList
+        );
+    }
+
 
 
 
