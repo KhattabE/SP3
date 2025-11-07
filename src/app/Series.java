@@ -22,32 +22,28 @@ public class Series extends Media  {
         this.episodeLength = episodeLength;
     }
 
-    // Getter for getting seasons
+    // Getters for readability
     public int getSeasons() {
         return seasons;
     }
 
-    // Getter for getting episodes
     public int getEpisodes() {
         return episodes;
     }
 
-    // Getter for getting episode lengths
     public int getEpisodeLength() {
         return episodeLength;
     }
 
-    // Setter for setting seasons
+    // Setters for writability
     public void setSeasons(int seasons) {
         this.seasons = seasons;
     }
 
-    // Setter for setting episodes
     public void setEpisodes(int episodes) {
         this.episodes = episodes;
     }
 
-    // Setter for setting episode length
     public void setEpisodeLength(int episodeLength) {
         this.episodeLength = episodeLength;
     }
