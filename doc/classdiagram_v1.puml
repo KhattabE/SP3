@@ -67,12 +67,9 @@ abstract class Medie {
     +ArrayList<Genre> getGenres();
     +int getReleaseYear();
     +void setRating(double rating);
-    +void displayInfo();
     +boolean matchesGenre(String genre);
     +boolean matchesTitle(String title);
-    +void medieIsPlaying();
-    +void medieIsPaused();
-    +void medieIsEnded();
+    +void displayInfo();
     +String toFileString();
 }
 class Movie {
@@ -81,6 +78,9 @@ class Movie {
     +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, int movieLength);
     +int getMovieLength();
     +void setMovieLength(int length);
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
     +boolean isLongMovie();
     +boolean isRatedAbove(double isRating);
 }
@@ -96,6 +96,9 @@ class Series {
     +void setSeasons(int seasons);
     +void setEpisodes(int episodes);
     +void setEpisodeLength(int length);
+    +void medieIsPlaying();
+    +void medieIsPaused();
+    +void medieIsEnded();
     +boolean isMiniSeries();
     +boolean isRatedAbove(double isRating);
 }

@@ -25,7 +25,36 @@ public abstract class Media {
     }
 
 
+    //Getters to make the fields readable
+    public String getTitle() {
+        return title;
+    }
 
+    public ArrayList<Genre> getGenres() {
+        return genres;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+
+    //Setter to make the fields writable
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    //Method for checking if the media contains the given genre (this will be used for filtering/search)
+    public boolean matchesGenre(String genre){
+        for (Genre genre1 : genres){
+            if (genre1.getGenreName().equalsIgnoreCase(genre)){
+                ui.displayMsg("There is a genre match!");
+                return  true;
+            }
+        }
+        ui.displayMsg("There is no genre match!");
+        return false;
+    }
 
 
 
