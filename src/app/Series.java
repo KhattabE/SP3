@@ -2,7 +2,7 @@ package app;
 
 import java.util.ArrayList;
 
-public class Series extends Media implements MediePlay, MediePause, MedieEnd {
+public class Series extends Media  {
 
 
 

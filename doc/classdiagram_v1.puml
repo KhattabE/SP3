@@ -73,11 +73,11 @@ abstract class Medie {
     +String toFileString();
 }
 class Movie {
-    -int movieLength;
+    -double movieLength;
 
-    +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, int movieLength);
+    +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, double movieLength);
     +int getMovieLength();
-    +void setMovieLength(int length);
+    +void setMovieLength(double length);
     +void medieIsPlaying();
     +void medieIsPaused();
     +void medieIsEnded();
@@ -142,13 +142,11 @@ class GenreManager {
 Medie <|-- Movie
 Medie <|-- Series
 
-Movie ..|> MediePlay
-Movie ..|> MediePause
-Movie ..|> MedieEnd
+Medie ..|> MediePlay
+Medie ..|> MediePause
+Medie ..|> MedieEnd
 
-Series ..|> MediePlay
-Series ..|> MediePause
-Series ..|> MedieEnd
+
 
 
 

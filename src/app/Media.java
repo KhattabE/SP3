@@ -5,7 +5,7 @@ import app.util.UIText;
 import javax.print.DocFlavor;
 import java.util.ArrayList;
 
-public abstract class Media {
+public abstract class Media implements MediePlay, MediePause, MedieEnd {
 
     //UIText object, so we can use them instead of "System.out.print"
     UIText ui = new UIText();
@@ -110,6 +110,23 @@ public abstract class Media {
         //This returns the full line
         return fileLine;
 
+    }
+
+
+
+    @Override
+    public void medieIsPlaying(){
+        ui.displayMsg("The Media is now playing...");
+    }
+
+    @Override
+    public void medieIsPaused(){
+        ui.displayMsg("The Media has been paused...");
+    }
+
+    @Override
+    public void medieIsEnded(){
+        ui.displayMsg("The Media has been ended...");
     }
 
 
