@@ -95,7 +95,7 @@ public class Movie extends Media  {
         for (int i = 0; i < getGenres().size(); i++) {
 
             //This will add the genre name to the genreList string
-            genreList += getGenres().get(i).getGenreName();
+            genreList += getGenres().get(i);
 
             //This will make sure if this is not the last genre, it will add a comma and space
             if (i < getGenres().size() - 1) {
