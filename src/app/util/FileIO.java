@@ -1,12 +1,9 @@
 package app.util;
 
-import app.GenreManager;
-import app.Media;
 import app.User;
 
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 

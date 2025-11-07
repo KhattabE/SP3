@@ -5,19 +5,19 @@ import app.util.UIText;
 import javax.print.DocFlavor;
 import java.util.ArrayList;
 
-public abstract class Media implements MediePlay, MediePause, MedieEnd {
+public abstract class Media implements MedieFunctions {
 
     //UIText object, so we can use them instead of "System.out.print"
     UIText ui = new UIText();
 
     //Class fields
     private String title;
-    private ArrayList<Genre> genres;
+    private ArrayList<String> genres;
     private int releaseYear;
     private double rating;
     private ArrayList<User> usersWhoHaveSeen;
 
-    public Media(String title, ArrayList<Genre> genres, int releaseYear, double rating) {
+    public Media(String title, ArrayList<String> genres, int releaseYear, double rating) {
         this.title = title;
         this.genres = genres;
         this.releaseYear = releaseYear;
@@ -30,7 +30,7 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
         return title;
     }
 
-    public ArrayList<Genre> getGenres() {
+    public ArrayList<String> getGenres() {
         return genres;
     }
 
@@ -48,16 +48,17 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
     }
 
     //Method for checking if the media contains the given genre (this will be used for filtering/search)
-    public boolean matchesGenre(String genre){
-        for (Genre genre1 : genres){
-            if (genre1.getGenreName().equalsIgnoreCase(genre)){
+    public boolean matchesGenre(String genre) {
+        for (String genre1 : genres) {
+            if (genre1.equalsIgnoreCase(genre)) {
                 ui.displayMsg("There is a genre match!");
-                return  true;
+                return true;
             }
         }
         ui.displayMsg("There is no genre match!");
         return false;
     }
+
 
     // Method for checking if the media title contains the given search string (This will be used for title search)
     public boolean matchesTitle(String titles){
@@ -80,14 +81,15 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
         // For loop to loop through each genre in the list
         for (int i = 0; i < genres.size(); i++) {
 
-            //This will add the genre name to the genreList string
-            genreList += genres.get(i).getGenreName();
+            //This will add the genre name directly
+            genreList += genres.get(i);
 
-            //This will make sure if this is not the last genre, it will add a comma and space
+            // This will add comma and space unless its the last one
             if (i < genres.size() - 1) {
                 genreList += ", ";
             }
         }
+
         ui.displayMsg("Media Title: " + this.title +
                         "\nMedia Release Year: " + this.releaseYear +
                         "\nMedia Rating: " + this.rating +
@@ -97,12 +99,12 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
 
     public String toFileString() {
 
-        //we start with title and release year, separated by semicolon
+        //We start with title and release year, separated by semicolon
         String fileLine = title + ";" + releaseYear + ";";
 
         //this loops through each genre and add the genre name to the line
-        for (Genre g : genres) {
-            fileLine += g.getGenreName() + ";";
+        for (String g : genres) {
+            fileLine += g + ";";
         }
 
         //this adds the rating at the end followed by semicolon
@@ -110,8 +112,8 @@ public abstract class Media implements MediePlay, MediePause, MedieEnd {
 
         //This returns the full line
         return fileLine;
-
     }
+
 
 
 

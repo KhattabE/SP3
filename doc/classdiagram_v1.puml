@@ -5,8 +5,6 @@ class Main{
     +static void main(String[] args)
 }
 
-
-
 class MainMenu {
     -String userFilePath;
     -String movieFilePath;
@@ -27,44 +25,38 @@ class MainMenu {
 }
 
 class UIText {
-        Scanner scanner;
-        +void displayMsg(String msg);
-        +int promptNumeric(String msg);
-        +String promptText(String msg);
-        +boolean promptBinary(String msg);
+    Scanner scanner;
+    +void displayMsg(String msg);
+    +int promptNumeric(String msg);
+    +String promptText(String msg);
+    +boolean promptBinary(String msg);
 }
 
 class FileIO {
     +ArrayList<User> loadUsers(String filepath);
     +void saveUsers(String filepath, ArrayList<User> users);
-    +ArrayList<Media> loadMovies(String filepath, GenreManager gm);
-    +ArrayList<Media> loadSeries(String filepath, GenreManager gm);
+    +ArrayList<Medie> loadMovies(String filepath);
+    +ArrayList<Medie> loadSeries(String filepath);
     +void saveUserLists(String folderPath, User user);
-    +void loadUserLists(String folderPath, User user, ArrayList<Media> allMedia);
+    +void loadUserLists(String folderPath, User user, ArrayList<Medie> allMedia);
 }
 
-interface MediePlay {
+interface MedieFunctions {
     +void medieIsPlaying();
-}
-
-interface MediePause {
     +void medieIsPaused();
-}
-
-interface MedieEnd {
     +void medieIsEnded();
 }
 
 abstract class Medie {
     -String title;
-    -ArrayList<Genre> genres;
+    -ArrayList<String> genres;
     -int releaseYear;
     -double rating;
     -ArrayList<User> usersWhoHaveSeen;
 
-    +Medie(String title, ArrayList<Genre> genres, int releaseYear, double rating);
+    +Medie(String title, ArrayList<String> genres, int releaseYear, double rating);
     +String getTitle();
-    +ArrayList<Genre> getGenres();
+    +ArrayList<String> getGenres();
     +int getReleaseYear();
     +void setRating(double rating);
     +boolean matchesGenre(String genre);
@@ -75,10 +67,11 @@ abstract class Medie {
     +void medieIsPaused();
     +void medieIsEnded();
 }
+
 class Movie {
     -double movieLength;
 
-    +Movie(String title, ArrayList<Genre> genres, int releaseYear, double rating, double movieLength);
+    +Movie(String title, ArrayList<String> genres, int releaseYear, double rating, double movieLength);
     +int getMovieLength();
     +void setMovieLength(double length);
     +boolean isLongMovie();
@@ -90,7 +83,7 @@ class Series {
     -int seasons;
     -int episodes;
     -double episodeLength;
-    +Series(String title, ArrayList<Genre> genres, int releaseYear, double rating, int seasons, int episodes, int episodeLength);
+    +Series(String title, ArrayList<String> genres, int releaseYear, double rating, int seasons, int episodes, int episodeLength);
     +int getSeasons();
     +int getEpisodes();
     +int getEpisodeLength();
@@ -105,65 +98,33 @@ class User {
     -String name;
     -String mail;
     -String code;
-    -ArrayList<Media> seenList;
-    -ArrayList<Media> favoriteList;
-    -ArrayList<Media> continueList;
+    -ArrayList<Medie> seenList;
+    -ArrayList<Medie> favoriteList;
+    -ArrayList<Medie> continueList;
     +User(String name, String mail, String code);
     +String getName();
     +String getMail();
     +String getCode();
-    +void addToList(String listName, Media media);
-    +void removeFromList(String listName, Media media);
+    +void addToList(String listName, Medie media);
+    +void removeFromList(String listName, Medie media);
     +void viewList(String listName);
-}
-
-class Genre {
-    -String genreName;
-    -String genreDescription;
-    +Genre(String genreName, String genreDescription);
-    +String getName();
-    +String getDescription();
-    +void setDescription(String description);
-    +String toString();
-}
-
-class GenreManager {
-    -ArrayList<Genre> genreList;
-    +GenreManager(ArrayList<Genre> genreList);
-    +void addGenre(Genre genre);
-    +ArrayList<Genre> getAllGenres();
-    +Genre getGenreByName(String name);
-    +void printGenres();
 }
 
 ' IS-A relationships
 Medie <|-- Movie
 Medie <|-- Series
-
-Medie ..|> MediePlay
-Medie ..|> MediePause
-Medie ..|> MedieEnd
-
-
-
-
+Medie ..|> MedieFunctions
 
 ' HAS-A relationships
 MainMenu o-- User
 MainMenu o-- UIText
 MainMenu o-- Movie
 MainMenu o-- Series
-MainMenu o-- GenreManager
 
 User o-- Medie
-Medie *-- Genre
 Medie o-- User
-
-GenreManager *-- Genre
 
 FileIO --> Medie
 Main o-- MainMenu
-
-
 
 @enduml
