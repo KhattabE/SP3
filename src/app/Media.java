@@ -3,7 +3,7 @@ package app;
 import javax.print.DocFlavor;
 import java.util.ArrayList;
 
-public abstract class Media {
+public abstract class Media implements MediaPlay, MediaPause, MediaEnd  {
 
     private String title;
     private ArrayList<Genre> genres;

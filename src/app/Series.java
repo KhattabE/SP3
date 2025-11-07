@@ -2,7 +2,7 @@ package app;
 
 import java.util.ArrayList;
 
-public class Series extends Media implements MediaPlay, MediaPause, MediaEnd {
+public class Series extends Media {
 
     private int seasons;
     private int episodes;
@@ -18,14 +18,17 @@ public class Series extends Media implements MediaPlay, MediaPause, MediaEnd {
 
     public int getSeasons(){
         // Getter for showing seasons
+        return 0;
     }
 
     public int getEpisodes(){
         // Getter for showing episodes
+        return 0;
     }
 
     public int getEpisodeLength(){
         // Getter for showing episode length
+        return 0;
     }
 
     public void setSeasons(int seasons){
