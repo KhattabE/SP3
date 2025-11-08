@@ -87,7 +87,25 @@ public class MainMenu {
     // Creates a new user account
     public void createAccount() {
         String name = ui.promptText("Enter a name: ");
+
+
         String mail = ui.promptText("Enter an email: ");
+
+
+        while(!mail.contains("@") || !mail.contains(".") ||  mail.indexOf("@") > mail.lastIndexOf(".") || !mail.contains("live") && !mail.contains("gmail") && !mail.contains("outlook") && !mail.contains("hotmail")  ||
+                ((mail.contains("gmail") && mail.indexOf("gmail") > mail.lastIndexOf(".")) ||
+                                (mail.contains("live") && mail.indexOf("live") > mail.lastIndexOf(".")) ||
+                                (mail.contains("outlook") && mail.indexOf("outlook") > mail.lastIndexOf(".")) ||
+                                (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf(".")))){
+
+            mail = ui.promptText("Please enter a valid email!: ");
+
+
+        }
+
+
+
+
         String code = ui.promptText("Enter a password ");
 
         // Just to show what is being created
