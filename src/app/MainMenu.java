@@ -65,21 +65,52 @@ public class MainMenu {
         }
     }
 
+    // A valid mail method so it has to follow critirias to process
+    public boolean validMail(String mail) {
+        if (mail == null) return false;
+
+        return (mail.contains("@") && mail.contains(".") && mail.indexOf("@") < mail.lastIndexOf(".") &&
+                (mail.contains("live") || mail.contains("gmail") || mail.contains("outlook") || mail.contains("hotmail")) &&
+                !((mail.contains("gmail") && mail.indexOf("gmail") > mail.lastIndexOf(".")) ||
+                        (mail.contains("live") && mail.indexOf("live") > mail.lastIndexOf(".")) ||
+                        (mail.contains("outlook") && mail.indexOf("outlook") > mail.lastIndexOf(".")) ||
+                        (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf("."))));
+    }
+
 
     // Lets a user log in with his/her email and password
     public void login() {
-        String mail = ui.promptText("Email: ");
-        String code = ui.promptText("Password: ");
+        while (true) {
+            String mail = ui.promptText("Email: ");
 
-        // Finds the user with that email which is entered
-        User u = findUserMail(mail);
+            while (!validMail(mail)) {
+                mail = ui.promptText("Please enter a valid email!: ");
+            }
 
-        // Checks if the user does exist and that the password matches
-        if (u != null && u.getCode().equals(code)) {
-            currentUser = u;
-            ui.displayMsg("Successfully logged in as " + u.getName());
-        } else {
+
+            String code = ui.promptText("Password: ");
+
+            // Finds the user with that email which is entered
+            User u = findUserMail(mail);
+
+            // Checks if the user does exist and that the password matches
+            if (u != null && u.getCode().equals(code)) {
+                currentUser = u;
+                ui.displayMsg("Successfully logged in as " + u.getName());
+                break;
+            }
             ui.displayMsg("Wrong email or password");
+
+            int choice = ui.promptNumeric("Type 1 to try again, or type 0 to exit to main menu");
+
+            if (choice == 0) {
+                ui.displayMsg("Exiting to main menu");
+                return;
+            } else if (choice != 1) {
+                ui.displayMsg("Invalid input");
+            }
+
+
         }
     }
 
@@ -92,18 +123,11 @@ public class MainMenu {
         String mail = ui.promptText("Enter an email: ");
 
 
-        while(!mail.contains("@") || !mail.contains(".") ||  mail.indexOf("@") > mail.lastIndexOf(".") || !mail.contains("live") && !mail.contains("gmail") && !mail.contains("outlook") && !mail.contains("hotmail")  ||
-                ((mail.contains("gmail") && mail.indexOf("gmail") > mail.lastIndexOf(".")) ||
-                                (mail.contains("live") && mail.indexOf("live") > mail.lastIndexOf(".")) ||
-                                (mail.contains("outlook") && mail.indexOf("outlook") > mail.lastIndexOf(".")) ||
-                                (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf(".")))){
-
+        while (!validMail(mail)) {
             mail = ui.promptText("Please enter a valid email!: ");
 
 
         }
-
-
 
 
         String code = ui.promptText("Enter a password ");
@@ -134,13 +158,10 @@ public class MainMenu {
     }
 
 
-
     //  will later save users to a file when fileIo is done
     public void saveUsersToFile() {
         // Saves the users to a file
     }
-
-
 
 
     // The menu shown after a user has logged in
@@ -148,20 +169,43 @@ public class MainMenu {
 
         while (true) {
             ui.displayMsg("\nWelcome, " + currentUser.getName());
-            ui.displayMsg("\n1:  ");
-            ui.displayMsg("\n2:  ");
-            ui.displayMsg("\n3:  ");
-            ui.displayMsg("\n0: Logout");
+            ui.displayMsg("1: Search for a movie or a series");
+            ui.displayMsg("2: List all movies");
+            ui.displayMsg("3: List all series");
+            ui.displayMsg("4: Back to user menu");
+            ui.displayMsg("0: Logout");
 
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
 
             switch (choice) {
+                case 1 -> ui.displayMsg("Search for a movie or a series: ");
+
+                case 2 -> {
+                    listAllMovies();
+                    ui.displayMsg("All movies available: ");
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+                }
+
+                case 3 -> {
+                    listAllSeries();
+                    ui.displayMsg("All series available: ");
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+                }
+
+                case 4 -> {
+                    ui.displayMsg("Exiting to user menu");
+                    return;
+                }
+
                 case 0 -> {
                     ui.displayMsg("Logging out...");
                     currentUser = null; // Set to null which means that no user is logged in anymore
                 }
+
                 default -> ui.displayMsg("Invalid choice, please try again.");
             }
 
@@ -172,7 +216,17 @@ public class MainMenu {
         }
     }
 
+    public void listAllMovies() {
+        for (Movie m : movieList) {
+            m.displayInfo();
+        }
+    }
 
+    public void listAllSeries() {
+        for (Series s : seriesList) {
+            s.displayInfo();
+        }
+    }
 
     // Helper method to check if a user's email already exists
     private User findUserMail(String mail) {
