@@ -148,7 +148,11 @@ public class MainMenu {
 
         while (true) {
             ui.displayMsg("\nWelcome, " + currentUser.getName());
-            ui.displayMsg("0: Logout");
+            ui.displayMsg("\n1:  ");
+            ui.displayMsg("\n2:  ");
+            ui.displayMsg("\n3:  ");
+            ui.displayMsg("\n0: Logout");
+
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
