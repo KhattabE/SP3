@@ -173,7 +173,7 @@ public class MainMenu {
             ui.displayMsg("2: List all movies");
             ui.displayMsg("3: List all series");
             ui.displayMsg("4: Back to user menu");
-            ui.displayMsg("0: Logout");
+            ui.displayMsg("0: Log-out");
 
 
             // Ask the user for a choice
@@ -197,7 +197,7 @@ public class MainMenu {
                 }
 
                 case 4 -> {
-                    ui.displayMsg("Exiting to user menu");
+                    ui.displayMsg("Returning to user menu");
                     return;
                 }
 
