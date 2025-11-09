@@ -63,8 +63,6 @@ public class UIText {
         else{
             return promptBinary(msg);
         }
-
-        .
     }
 
 
