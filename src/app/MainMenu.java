@@ -106,7 +106,13 @@ public class MainMenu {
 
 
 
-        String code = ui.promptText("Enter a password ");
+        String code = ui.promptText("Enter a password (4 chars at least) ");
+
+        //A while loop to make sure the users code is at least 4 chars long
+        while(code.length() < 4){
+            code = ui.promptText("Try again! the password must be 4 chars at least! ");
+        }
+
 
         // Just to show what is being created
         ui.displayMsg("Creating account for: " + name + " (" + mail + ") ");
