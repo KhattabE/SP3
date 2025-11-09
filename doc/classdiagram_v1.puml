@@ -17,9 +17,12 @@ class MainMenu {
     -UIText ui;
 
     +void show();
+    +void validMail();
     +void login();
     +void createAccount();
     +void loadUsersFromFile();
+    +void listAllMovies();
+    +void listAllSeries();
     +void saveUsersToFile();
     +void showUserMenu();
 }
