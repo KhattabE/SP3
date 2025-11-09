@@ -1,13 +1,14 @@
 package app;
 
 import app.util.UIText;
+import app.util.FileIO;
 
 import java.util.ArrayList;
 
 public class MainMenu {
 
     // File paths for storing users, movies, and also series
-    private String userFilePath = "users.csv";
+    private String userFilePath = "data/users.csv";
     private String movieFilePath = "movies.csv";
     private String seriesFilePath = "series.csv";
 
@@ -22,6 +23,8 @@ public class MainMenu {
     // Used to handle input
     private UIText ui;
 
+    // File I/O helper
+    private final FileIO io = new FileIO();
 
     // Constructor
     public MainMenu(String userFilePath, String movieFilePath, String seriesFilePath) {
@@ -37,9 +40,10 @@ public class MainMenu {
         this.currentUser = null;
     }
 
-
     // The main menu shown when the program starts
     public void show() {
+        loadUsersFromFile(); // load users from CSV at start
+
         boolean isRunning = true;
         while (isRunning) {
             ui.displayMsg("\nWelcome to the streaming service AEMK Entertainments!");
@@ -77,7 +81,6 @@ public class MainMenu {
                         (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf("."))));
     }
 
-
     // Lets a user log in with his/her email and password
     public void login() {
         while (true) {
@@ -86,7 +89,6 @@ public class MainMenu {
             while (!validMail(mail)) {
                 mail = ui.promptText("Please enter a valid email!: ");
             }
-
 
             String code = ui.promptText("Password: ");
 
@@ -109,34 +111,24 @@ public class MainMenu {
             } else if (choice != 1) {
                 ui.displayMsg("Invalid input");
             }
-
-
         }
     }
-
 
     // Creates a new user account
     public void createAccount() {
         String name = ui.promptText("Enter a name: ");
-
-
         String mail = ui.promptText("Enter an email: ");
-
 
         while (!validMail(mail)) {
             mail = ui.promptText("Please enter a valid email!: ");
         }
 
-
         String code = ui.promptText("Enter a password (4 chars at least) ");
 
         //A while loop to make sure the users code is at least 4 chars long
-        while(code.length() < 4){
+        while (code.length() < 4) {
             code = ui.promptText("Try again! the password must be 4 chars at least! ");
         }
-
-
-
 
         // Just to show what is being created
         ui.displayMsg("Creating account for: " + name + " (" + mail + ") ");
@@ -156,19 +148,41 @@ public class MainMenu {
         currentUser = u;
 
         ui.displayMsg("Account has been created. You are now logged in as " + name + ".");
+
+        // Save updated users list to file
+        saveUsersToFile();
     }
 
-    //  will later load users from a file when fileIo is done
+    // will later load users from a file when fileIo is done
     public void loadUsersFromFile() {
-        // loads the users from a file
+        users.clear();
+        ArrayList<String> lines = io.readData(userFilePath); // header skipped inside FileIO
+
+        for (String line : lines) {
+            String[] p = line.split(";");
+            if (p.length >= 3) {
+                users.add(new User(p[0], p[1], p[2]));
+            }
+        }
+
+        if (users.isEmpty()) {
+            ui.displayMsg("No users found in file.");
+        } else {
+            ui.displayMsg("Users loaded from file:");
+            for (User u : users) {
+                ui.displayMsg(" - " + u.getName() + " (" + u.getMail() + ")");
+            }
+        }
     }
 
-
-    //  will later save users to a file when fileIo is done
+    // will later save users to a file when fileIo is done
     public void saveUsersToFile() {
-        // Saves the users to a file
+        ArrayList<String> lines = new ArrayList<>();
+        for (User u : users) {
+            lines.add(u.getName() + ";" + u.getMail() + ";" + u.getCode());
+        }
+        io.saveData(lines, userFilePath, "name;mail;code");
     }
-
 
     // The menu shown after a user has logged in
     public void showUserMenu() {
@@ -180,7 +194,6 @@ public class MainMenu {
             ui.displayMsg("3: List all series");
             ui.displayMsg("4: Back to user menu");
             ui.displayMsg("0: Log-out");
-
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
@@ -248,5 +261,4 @@ public class MainMenu {
         // If no user has that mail then return null
         return null;
     }
-
 }

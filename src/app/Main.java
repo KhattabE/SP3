@@ -1,14 +1,18 @@
 package app;
 
+import app.util.FileIO;
+
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
-        MainMenu m = new MainMenu("user.csv", "series.csv", "movie.csv");
+        MainMenu menu = new MainMenu(
+                "data/users.csv",
+                "data/movies.csv",
+                "data/series.csv"
+        );
 
-        m.show();
-
-
-
+        menu.show(); // Starts the mainMenu
     }
-
 }
