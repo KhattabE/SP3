@@ -153,18 +153,22 @@ public class MainMenu {
         saveUsersToFile();
     }
 
-    // will later load users from a file when fileIo is done
+    // This method loads users from a file using FileIO
     public void loadUsersFromFile() {
-        users.clear();
-        ArrayList<String> lines = io.readData(userFilePath); // header skipped inside FileIO
+        users.clear(); // This remove any users currently in memory
 
+        // This reads all lines from the file
+        ArrayList<String> lines = io.readData(userFilePath);
+
+        // for each line is split into parts (name;mail;code)
         for (String line : lines) {
             String[] p = line.split(";");
-            if (p.length >= 3) {
-                users.add(new User(p[0], p[1], p[2]));
+            if (p.length >= 3) { // This makes sure the line has all 3 parts
+                users.add(new User(p[0], p[1], p[2])); // This creates a new User and adds it to the list
             }
         }
 
+        // if theire is no users were found, tell the user else show all loaded users
         if (users.isEmpty()) {
             ui.displayMsg("No users found in file.");
         } else {
@@ -175,16 +179,20 @@ public class MainMenu {
         }
     }
 
-    // will later save users to a file when fileIo is done
+    // This method saves all users in memory to the users file
     public void saveUsersToFile() {
         ArrayList<String> lines = new ArrayList<>();
+
+        // This converts each user object into a single line of text which is a: (name;mail;code)
         for (User u : users) {
             lines.add(u.getName() + ";" + u.getMail() + ";" + u.getCode());
         }
+
+        // This sends the data to FileIO to actually write it into the file
         io.saveData(lines, userFilePath, "name;mail;code");
     }
 
-    // The menu shown after a user has logged in
+    // This is the menu shown after a user has logged in
     public void showUserMenu() {
 
         while (true) {
