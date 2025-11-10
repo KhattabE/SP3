@@ -210,15 +210,15 @@ public class MainMenu {
                 case 1 -> ui.displayMsg("Search for a movie or a series: ");
 
                 case 2 -> {
-                    listAllMovies();
                     ui.displayMsg("All movies available: ");
+                    listAllMovies();
                     String input = ui.promptText("Type 0 to return to menu: ");
                     if (input.equals("0")) continue;
                 }
 
                 case 3 -> {
-                    listAllSeries();
                     ui.displayMsg("All series available: ");
+                    listAllSeries();
                     String input = ui.promptText("Type 0 to return to menu: ");
                     if (input.equals("0")) continue;
                 }
@@ -243,17 +243,47 @@ public class MainMenu {
         }
     }
 
+    //This method will show all the Movies
     public void listAllMovies() {
-        for (Movie m : movieList) {
-            m.displayInfo();
+
+        // Read all lines from the Movies CSV file (FileIO automatically skips the header)
+        ArrayList<String> lines = io.readData(movieFilePath);
+
+        // If the file is empty or could not be read, tell the user and stop
+        if (lines.isEmpty()) {
+            ui.displayMsg("No Movies found.");
+            return;
+        }
+
+        // If we got some lines, show them to the user
+        ui.displayMsg("Movies from file:");
+        for (String line : lines) {
+            // Print each Movies line exactly as it appears in the CSV file
+            ui.displayMsg(" - " + line);
         }
     }
 
+    //This method will show all the series
     public void listAllSeries() {
-        for (Series s : seriesList) {
-            s.displayInfo();
+
+        // Read all lines from the series CSV file (FileIO automatically skips the header)
+        ArrayList<String> lines = io.readData(seriesFilePath);
+
+        // If the file is empty or could not be read, tell the user and stop
+        if (lines.isEmpty()) {
+            ui.displayMsg("No series found.");
+            return;
+        }
+
+        // If we got some lines, show them to the user
+        ui.displayMsg("Series from file:");
+        for (String line : lines) {
+            // Print each series line exactly as it appears in the CSV file
+            ui.displayMsg(" - " + line);
         }
     }
+
+
 
     // Helper method to check if a user's email already exists
     private User findUserMail(String mail) {
@@ -269,4 +299,15 @@ public class MainMenu {
         // If no user has that mail then return null
         return null;
     }
+
+
+
+
+
+
+
+
+
+
+
 }
