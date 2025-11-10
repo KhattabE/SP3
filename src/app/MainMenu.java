@@ -206,8 +206,8 @@ public class MainMenu {
             ui.displayMsg("\nWelcome, " + currentUser.getName());
             ui.displayMsg("1: List all movies");
             ui.displayMsg("2: List all series");
-            ui.displayMsg("3: Search for a movie or a series");
-            ui.displayMsg("4: Search all film from a genre");
+            ui.displayMsg("3: Search for a movie/series");
+            ui.displayMsg("4: Search all movies/series from a genre");
             ui.displayMsg("5: List over seen movies/series");
             ui.displayMsg("6: List over saved movies/series");
             ui.displayMsg("7: Back to user menu");
@@ -242,6 +242,11 @@ public class MainMenu {
                 }
 
                 case 4 ->{
+                    searchAfterSameGenreMedia();
+
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
 
                 }
 
@@ -304,6 +309,41 @@ public class MainMenu {
 
         if(!isFound){
             ui.displayMsg("No movie or series found with the given name!");
+        }
+
+
+
+    }
+
+
+    //Method to find all media under a searched genre
+    public void searchAfterSameGenreMedia(){
+        String genreName = ui.promptText("Enter the genre, to see all media from that genre: ");
+
+        boolean genreIsFound = false;
+
+        //Searches through all movies
+        for(Movie movie : movieList){
+            if(movie.matchesGenre(genreName)){
+                ui.displayMsg("We have found all movies that matches this genre!");
+                movie.displayInfo();
+                genreIsFound = true;
+            }
+        }
+
+        // Search through all series
+        for (Series series : seriesList) {
+            if (series.matchesGenre(genreName)) {
+                ui.displayMsg("We have found all series that match this genre!");
+                series.displayInfo();
+                genreIsFound = true;
+            }
+        }
+
+        // If nothing was found
+        if (!genreIsFound) {
+            ui.displayMsg("No movies or series found with theis genre: " + genreName);
+            
         }
 
 

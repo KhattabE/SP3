@@ -41,6 +41,9 @@ public abstract class Media implements MedieFunctions {
         return rating;
     }
 
+
+
+
     //Setter to make the fields writable
     public void setRating(double rating) {
         this.rating = rating;
@@ -50,13 +53,12 @@ public abstract class Media implements MedieFunctions {
     public boolean matchesGenre(String genre) {
         for (String genre1 : genres) {
             if (genre1.equalsIgnoreCase(genre)) {
-                ui.displayMsg("There is a genre match!");
-                return true;
+                return true; // found a match, stop checking
             }
         }
-        ui.displayMsg("There is no genre match!");
-        return false;
+        return false; // no match found after checking all
     }
+
 
 
     // Method for checking if the media title contains the given search string (This will be used for title search)
