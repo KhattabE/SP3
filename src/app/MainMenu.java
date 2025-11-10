@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 public class MainMenu {
 
+
+    //
+    private Media media;
+
     // File paths for storing users, movies, and also series
     private String userFilePath = "data/users.csv";
     private String movieFilePath = "movies.csv";
@@ -42,7 +46,10 @@ public class MainMenu {
 
     // The main menu shown when the program starts
     public void show() {
-        loadUsersFromFile(); // load users from CSV at start
+        loadUsersFromFile(); // load users from csv at start
+        loadMoviesFromFile(); //Loads movies from csv at start
+        loadSeriesFromFile(); //Loads series from csv at start
+
 
         boolean isRunning = true;
         while (isRunning) {
@@ -197,33 +204,56 @@ public class MainMenu {
 
         while (true) {
             ui.displayMsg("\nWelcome, " + currentUser.getName());
-            ui.displayMsg("1: Search for a movie or a series");
-            ui.displayMsg("2: List all movies");
-            ui.displayMsg("3: List all series");
-            ui.displayMsg("4: Back to user menu");
+            ui.displayMsg("1: List all movies");
+            ui.displayMsg("2: List all series");
+            ui.displayMsg("3: Search for a movie or a series");
+            ui.displayMsg("4: Search all film from a genre");
+            ui.displayMsg("5: List over seen movies/series");
+            ui.displayMsg("6: List over saved movies/series");
+            ui.displayMsg("7: Back to user menu");
             ui.displayMsg("0: Log-out");
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
 
             switch (choice) {
-                case 1 -> ui.displayMsg("Search for a movie or a series: ");
-
-                case 2 -> {
+                case 1 -> {
                     ui.displayMsg("All movies available: ");
                     listAllMovies();
                     String input = ui.promptText("Type 0 to return to menu: ");
                     if (input.equals("0")) continue;
+
                 }
 
-                case 3 -> {
+                case 2 -> {
                     ui.displayMsg("All series available: ");
                     listAllSeries();
                     String input = ui.promptText("Type 0 to return to menu: ");
                     if (input.equals("0")) continue;
+
                 }
 
-                case 4 -> {
+                case 3 -> {
+                    searchAfterMedia();
+
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
+                }
+
+                case 4 ->{
+
+                }
+
+                case 5 ->{
+
+                }
+
+                case 6 ->{
+
+                }
+
+                case 7-> {
                     ui.displayMsg("Returning to user menu");
                     return;
                 }
@@ -242,6 +272,45 @@ public class MainMenu {
             }
         }
     }
+
+    //This method is for searching for movie
+    public void searchAfterMedia(){
+        String mediaName = ui.promptText("Enter the name of the movie/series you are searching for: ");
+
+        boolean isFound = false;
+
+        //Loops through the movieList arraylist
+        for(Movie movie : movieList){
+            //Checks if the movie title equals what the user have written
+            if(movie.getTitle().equalsIgnoreCase(mediaName)){
+                ui.displayMsg("Movie Found!");
+                //Shows info about the movie
+                movie.displayInfo();
+                isFound = true;
+
+            }
+        }
+
+        //Loops through the seriesList arraylist
+        for(Series series : seriesList){
+            //Checks if the series title equals what the user have written
+            if(series.getTitle().equalsIgnoreCase(mediaName)){
+                ui.displayMsg("Series Found!");
+                series.displayInfo();
+                isFound = true;
+                break;
+            }
+        }
+
+        if(!isFound){
+            ui.displayMsg("No movie or series found with the given name!");
+        }
+
+
+
+    }
+
+
 
     //This method will show all the Movies
     public void listAllMovies() {
@@ -301,13 +370,152 @@ public class MainMenu {
     }
 
 
+    // Loads all movies from the csv file and stores them in the movieList
+    public void loadMoviesFromFile() {
+
+        // This will read all lines from the movie file
+        ArrayList<String> lines = io.readData(movieFilePath);
+
+        // This goes through each line in the file
+        for (String line : lines) {
+
+            // This will split the line into parts using ";" since our csv uses that as separator
+            String[] parts = line.split(";");
+
+            // This makes sure the line has enough data to create a movie (at least 4 parts)
+            if (parts.length < 4) continue;
+
+            // This reads the movie title from the first column
+            String title = parts[0].trim();
+
+            // This reads the release year from the second column
+            int year = 0;
+            try {
+                year = Integer.parseInt(parts[1].trim());
+            } catch (Exception e) {
+                // If something goes wrong this will skip this movie and continue with the next line
+                continue;
+            }
+
+            // This reads the rating from the last column
+            // we sat 0.0 to be the default value, but this is only if parsing fails
+            double rating = 0.0;
+            try {
+                String ratingText = parts[parts.length - 1].trim();
+
+                // This is to replace the comma with a dot
+                ratingText = ratingText.replace(",", ".");
+
+                rating = Double.parseDouble(ratingText);
+            } catch (Exception e) {
+                // If the rating cant be read, this will keep it as 0.0
+            }
 
 
 
+            // Reads all genres from the remaining columns
+            ArrayList<String> genres = new ArrayList<>();
+            for (int i = 2; i < parts.length - 1; i++) {  // notice "-1" here
+                String genre = parts[i].trim();
+                if (!genre.isEmpty()) {
+                    genres.add(genre);
+                }
+            }
+
+            // Creates a Movie object from the csv line
+            Movie movie = new Movie(title, genres, year, rating, this.ui, 0);
+
+            // Adds the movie to the list in memory
+            movieList.add(movie);
+        }
+
+        // This is just fedback to make sure it worked
+        ui.displayMsg("Loaded " + movieList.size() + " movies from file!");
+    }
 
 
+
+    // So this method loads all series from the csv file and stores them in the seriesList
+    public void loadSeriesFromFile() {
+
+        // This will read all lines from the series file
+        ArrayList<String> lines = io.readData(seriesFilePath);
+
+        // This goes through each line in the file
+        for (String line : lines) {
+
+            // This will split the line into parts using ";" since our csv uses that as separator
+            String[] parts = line.split(";");
+
+            // This makes sure the line has enough data to create a series (at least 5 parts)
+            if (parts.length < 3) continue;
+
+            // This reads the series title from the first column
+            String title = parts[0].trim();
+
+            // This reads the release year from the second column
+            int year = 0;
+            try {
+                String yearText = parts[1].trim();
+
+                //takes only the first part
+                if (yearText.contains("-")) {
+                    yearText = yearText.split("-")[0].trim();
+                }
+
+                year = Integer.parseInt(yearText);
+            } catch (Exception e) {
+                // this is if something goes wrong, this will skip this series and continue with the next line
+                continue;
+            }
+
+
+            // This reads all genres from the middle columns
+            ArrayList<String> genres = new ArrayList<>();
+            for (int i = 2; i < parts.length - 2; i++) { // everything except year, title, rating, and after
+                String genre = parts[i].trim();
+                if (!genre.isEmpty()) {
+                    genres.add(genre);
+                }
+            }
+
+            // This reads the rating from the second to last column
+            double rating = 0.0;
+            try {
+                String ratingText = parts[parts.length - 2].trim().replace(",", ".");
+                rating = Double.parseDouble(ratingText);
+            } catch (Exception e) {
+                // If rating is not readable, it will keep it as 0.0
+            }
+
+
+            // This reads the last column which has season + episode codes
+            String episodeData = parts[parts.length - 1].trim();
+            int seasons = 0;
+            int episodes = 0;
+
+
+            // Creates a Series object from the csv line
+            Series series = new Series(title, genres, year, rating, seasons, episodes, 0);
+
+            // Here we add the series to the list in memory
+            seriesList.add(series);
+        }
+
+        // This is just feedback to make sure it worked
+        ui.displayMsg("Loaded " + seriesList.size() + " series from file!");
+    }
 
 
 
 
 }
+
+
+
+
+
+
+
+
+
