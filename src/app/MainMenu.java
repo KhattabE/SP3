@@ -15,11 +15,15 @@ public class MainMenu {
     private String userFilePath = "data/users.csv";
     private String movieFilePath = "movies.csv";
     private String seriesFilePath = "series.csv";
+    private String savedMediaFilePath = "data/savedMedia.csv";
+
 
     // These are lists to hold all of the movies, series, and users.
     private ArrayList<Movie> movieList;
     private ArrayList<Series> seriesList;
     private ArrayList<User> users;
+    private ArrayList<Media> savedList;
+    private ArrayList<Media> seenList;
 
     // this keeps track of the user currently logged in
     private User currentUser;
@@ -42,6 +46,8 @@ public class MainMenu {
         this.seriesList = new ArrayList<>();
         this.users = new ArrayList<>();
         this.currentUser = null;
+        this.savedList = new ArrayList<>();
+        this.seenList = new ArrayList<>();
     }
 
     // The main menu shown when the program starts
@@ -49,6 +55,7 @@ public class MainMenu {
         loadUsersFromFile(); // load users from csv at start
         loadMoviesFromFile(); //Loads movies from csv at start
         loadSeriesFromFile(); //Loads series from csv at start
+
 
 
         boolean isRunning = true;
@@ -106,6 +113,7 @@ public class MainMenu {
             if (u != null && u.getCode().equals(code)) {
                 currentUser = u;
                 ui.displayMsg("Successfully logged in as " + u.getName());
+                loadSavedMediaFromFile(); //Loads savedMedia csv at start
                 break;
             }
             ui.displayMsg("Wrong email or password");
@@ -208,9 +216,10 @@ public class MainMenu {
             ui.displayMsg("2: List all series");
             ui.displayMsg("3: Search for a movie/series");
             ui.displayMsg("4: Search all movies/series from a genre");
-            ui.displayMsg("5: List over seen movies/series");
+            ui.displayMsg("5: Save movies/series");
             ui.displayMsg("6: List over saved movies/series");
-            ui.displayMsg("7: Back to user menu");
+            ui.displayMsg("7: List over seen movies/series");
+            ui.displayMsg("8: Back to user menu");
             ui.displayMsg("0: Log-out");
 
             // Ask the user for a choice
@@ -251,14 +260,27 @@ public class MainMenu {
                 }
 
                 case 5 ->{
+                    savedMediaList();
+
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
 
                 }
 
                 case 6 ->{
 
+                    listOverSavedMedia();
+
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
+
+                }
+                case 7 ->{
+
                 }
 
-                case 7-> {
+                case 8-> {
                     ui.displayMsg("Returning to user menu");
                     return;
                 }
@@ -391,6 +413,82 @@ public class MainMenu {
             ui.displayMsg(" - " + line);
         }
     }
+
+    //Method to save media to a saved list
+    public void savedMediaList(){
+
+        ui.displayMsg("Would you like to save a movie or a series?");
+        ui.displayMsg("1: Save a movie");
+        ui.displayMsg("2: Save a series");
+        int choice = ui.promptNumeric("Enter your choice: ");
+
+        boolean isFound = false;
+
+        //an if statment to check which choice the user makes
+        if(choice == 1){
+            //This is where the user will write the movie name
+            String name = ui.promptText("Enter the exact name of the movie you want to save: ");
+
+            for(Movie movie : movieList){
+
+                //If statment to check if the movie exists or not
+                if(name.equalsIgnoreCase(movie.getTitle())){
+                    ui.displayMsg("Movie found!");
+                    savedList.add(movie);
+                    ui.displayMsg("Movie saved successfully!");
+                    isFound = true;
+                    break;
+                }
+
+            }
+
+
+        } else if(choice == 2){
+
+            //This is where the user will write the series name
+            String name = ui.promptText("Enter the exact name of the series you want to save: ");
+
+            for(Series series : seriesList){
+
+
+                //If statment to check if the movie exists or not
+                if(name.equalsIgnoreCase(series.getTitle())){
+                    ui.displayMsg("Series found!");
+                    savedList.add(series);
+                    ui.displayMsg("Series saved successfully!");
+                    isFound = true;
+                    break;
+                }
+
+            }
+
+
+        }
+
+        if (!isFound) {
+            ui.displayMsg("No Media exists with that name!");
+        }
+
+
+        // Save to file at the end
+        saveSavedMediaToFile();
+
+    }
+
+    //Method to see saved list
+    public void listOverSavedMedia() {
+        if (savedList.isEmpty()) {
+            ui.displayMsg("You have no saved media yet!");
+            return;
+        }
+
+        ui.displayMsg("Here is your saved media:");
+        for (Media savedL : savedList) {
+            savedL.displayInfo();
+        }
+    }
+
+
 
 
 
@@ -545,6 +643,92 @@ public class MainMenu {
         // This is just feedback to make sure it worked
         ui.displayMsg("Loaded " + seriesList.size() + " series from file!");
     }
+
+
+    // Method to save all saved media (movies or series) to the savedMedia.csv file
+    public void saveSavedMediaToFile() {
+
+        // Create a list to hold each line of text that will go into the CSV
+        ArrayList<String> lines = new ArrayList<>();
+
+        // Goes through every media item that the user has saved
+        for (Media media : savedList) {
+
+            // Creates one single line of text for this media
+            String line = currentUser.getName() + ";" +
+                    "Media" + ";" +
+                    media.getTitle() + ";" +
+                    media.getReleaseYear() + ";" +
+                    media.getRating();
+
+            // Adds that line to our list
+            lines.add(line);
+        }
+
+        // This will save all lines into the CSV file
+        io.saveData(lines, savedMediaFilePath, "userEmail;mediaType;title;year;rating");
+
+        // This will just give a small feedback to confirm that the method worked
+        ui.displayMsg("Saved " + savedList.size() + " media items to savedMedia.csv!");
+    }
+
+
+    // So this method loads all saved media from the csv file and stores them in the savedList
+    public void loadSavedMediaFromFile() {
+
+        // This will read all lines from the saved media file
+        ArrayList<String> lines = io.readData(savedMediaFilePath);
+
+        // This goes through each line in the file
+        for (String line : lines) {
+
+            // This will split the line into parts using ";" since our csv uses that as separator
+            String[] parts = line.split(";");
+
+            // This makes sure the line has enough data to create a saved media (5 parts minimum)
+            if (parts.length < 5) continue;
+
+            // This checks if the media belongs to the logged-in user
+            String email = parts[0].trim();
+            if (!email.trim().equalsIgnoreCase(currentUser.getMail().trim())) continue;
+
+            // This reads the media type from the second column
+            String type = parts[1].trim();
+
+            // This reads the title from the third column
+            String title = parts[2].trim();
+
+            // This reads the release year from the fourth column
+            int year = 0;
+            try {
+                year = Integer.parseInt(parts[3].trim());
+            } catch (Exception e) {
+                continue;
+            }
+
+            // This reads the rating from the fifth column
+            double rating = 0.0;
+            try {
+                rating = Double.parseDouble(parts[4].trim().replace(",", "."));
+            } catch (Exception e) {
+                // keep rating as 0.0 if parsing fails
+            }
+
+            // Creates a Movie or Series object based on type
+            if (type.equalsIgnoreCase("Movie")) {
+                Movie movie = new Movie(title, new ArrayList<>(), year, rating, this.ui, 0);
+                savedList.add(movie);
+            } else if (type.equalsIgnoreCase("Series")) {
+                Series series = new Series(title, new ArrayList<>(), year, rating, 0, 0, 0);
+                savedList.add(series);
+            }
+        }
+
+        // This is just feedback to make sure it worked
+        ui.displayMsg("Loaded " + savedList.size() + " saved media for " + currentUser.getName() + "!");
+    }
+
+
 
 
 
