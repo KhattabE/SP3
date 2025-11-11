@@ -219,8 +219,8 @@ public class MainMenu {
             ui.displayMsg("5: Save movies/series");
             ui.displayMsg("6: List over saved movies/series");
             ui.displayMsg("7: List over seen movies/series");
-            ui.displayMsg("8: Log-out and return to user menu");
-            ui.displayMsg("0: Exit AEMK Entertainments");
+            ui.displayMsg("8: Back to user menu");
+            ui.displayMsg("0: Log-out");
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
@@ -230,8 +230,7 @@ public class MainMenu {
                     ui.displayMsg("All movies available: ");
                     listAllMovies();
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
 
                 }
 
@@ -239,24 +238,23 @@ public class MainMenu {
                     ui.displayMsg("All series available: ");
                     listAllSeries();
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
                 }
 
                 case 3 -> {
                     searchAfterMedia();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
                 }
 
                 case 4 ->{
                     searchAfterSameGenreMedia();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
 
 
                 }
@@ -265,8 +263,8 @@ public class MainMenu {
                     savedMediaList();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
                 }
 
                 case 6 ->{
@@ -274,8 +272,8 @@ public class MainMenu {
                     listOverSavedMedia();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    if (input.equals("0")) continue;
+
 
                 }
                 case 7 ->{
@@ -283,17 +281,21 @@ public class MainMenu {
                 }
 
                 case 8-> {
-                    ui.displayMsg("Logging out and returning to user menu");
+                    ui.displayMsg("Returning to user menu");
                     return;
                 }
 
                 case 0 -> {
-                    ui.displayMsg("Closing AEMK Entertainments!");
+                    ui.displayMsg("Logging out...");
                     currentUser = null; // Set to null which means that no user is logged in anymore
-                    System.exit(0); // Closes program
                 }
 
                 default -> ui.displayMsg("Invalid choice, please try again.");
+            }
+
+            // If the user logs out then go back to main menu
+            if (currentUser == null) {
+                break;
             }
         }
     }
@@ -343,33 +345,27 @@ public class MainMenu {
         boolean genreIsFound = false;
 
         //Searches through all movies
-        for (Movie movie : movieList) {
-            if (movie.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all movies that match " + genreName + "!");
-                    genreIsFound = true;
-                }
+        for(Movie movie : movieList){
+            if(movie.matchesGenre(genreName)){
+                ui.displayMsg("We have found all movies that matches this genre!");
                 movie.displayInfo();
-                ui.displayMsg("");
+                genreIsFound = true;
             }
         }
 
         // Search through all series
         for (Series series : seriesList) {
             if (series.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all series that match " + genreName + "!");
-                    genreIsFound = true;
-                }
+                ui.displayMsg("We have found all series that match this genre!");
                 series.displayInfo();
-                ui.displayMsg("");
+                genreIsFound = true;
             }
         }
 
         // If nothing was found
         if (!genreIsFound) {
-            ui.displayMsg("No movies or series found with this genre: " + genreName);
-
+            ui.displayMsg("No movies or series found with theis genre: " + genreName);
+            
         }
 
 
