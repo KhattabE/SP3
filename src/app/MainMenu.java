@@ -249,12 +249,6 @@ public class MainMenu {
 
                 case 4 -> {
                     searchAfterSameGenreMedia();
-
-                    String input = ui.promptText("Try again or type 0 to return to menu");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
-
-
                 }
 
                 case 5 -> {
@@ -312,7 +306,7 @@ public class MainMenu {
                     String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
                     if (choice.equals("1")) {
                         ui.displayMsg("Now playing: " + movie.getTitle());
-                        ui.displayMsg(movie.getTitle() + " playing...");
+                        ui.displayMsg(movie.getTitle() + " is playing...");
                         ui.displayMsg(movie.getTitle() + " is finished");
                         ui.displayMsg("Returning to menu");
                     }
@@ -332,7 +326,7 @@ public class MainMenu {
                     String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
                     if (choice.equals("1")) {
                         ui.displayMsg("Now playing: " + series.getTitle());
-                        ui.displayMsg(series.getTitle() + " playing...");
+                        ui.displayMsg(series.getTitle() + " is playing...");
                         ui.displayMsg(series.getTitle() + " is finished");
                         ui.displayMsg("Returning to menu");
                     }
@@ -358,44 +352,91 @@ public class MainMenu {
         }
     }
 
-    //Method to find all media under a searched genre
+    // thid method is to find all media under a searched genre
     public void searchAfterSameGenreMedia() {
         String genreName = ui.promptText("Enter the genre, to see all media from that genre: ");
 
-        boolean genreIsFound = false;
+        while (true) {
+            boolean genreIsFound = false;
 
-        //Searches through all movies
-        for (Movie movie : movieList) {
-            if (movie.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all movies that match " + genreName + "!");
-                    genreIsFound = true;
+            ui.displayMsg("");
+
+            // showing all movies
+
+            for (Movie movie : movieList) {
+                if (movie.matchesGenre(genreName)) {
+                    if (!genreIsFound) {
+                        ui.displayMsg("**** All movies and series in " + genreName + " *****" );
+                        ui.displayMsg("");
+                        genreIsFound = true;
+                    }
+                    movie.displayInfo();
+                    ui.displayMsg("");
                 }
-                movie.displayInfo();
-                ui.displayMsg("");
             }
-        }
 
-        // Search through all series
-        for (Series series : seriesList) {
-            if (series.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all series that match " + genreName + "!");
-                    genreIsFound = true;
+            // shows all series
+            for (Series series : seriesList) {
+                if (series.matchesGenre(genreName)) {
+                    if (!genreIsFound) {
+                        ui.displayMsg("**** All series and movies in " + genreName + " *****" );
+                        ui.displayMsg("");
+                        genreIsFound = true;
+                    }
+                    series.displayInfo();
+                    ui.displayMsg("");
                 }
-                series.displayInfo();
-                ui.displayMsg("");
             }
+
+            // if no series or movie is found
+            if (!genreIsFound) {
+                ui.displayMsg("No movies or series found with the genre: " + genreName);
+                String input = ui.promptText("Try again or type 0 to return to menu");
+                if (input.equals("0")) return;
+                genreName = input;
+                continue;
+            }
+
+            // asks user which one to play
+            while (true) {
+                String seleact = ui.promptText("Type the exact title you want to play or 0 to return to menu");
+                if (seleact.equals("0")) return;
+
+                boolean foundMatch = false;
+
+                // Playing the movie
+                for (Movie movie : movieList) {
+                    if (movie.getTitle().equalsIgnoreCase(seleact) && movie.matchesGenre(genreName)) {
+                        ui.displayMsg("Now playing: " + movie.getTitle());
+                        ui.displayMsg(movie.getTitle() + " is playing...");
+                        ui.displayMsg(movie.getTitle() + " is finished");
+                        ui.displayMsg("Returning to menu");
+                        foundMatch = true;
+                        break;
+                    }
+                }
+
+                // playing the series
+                for (Series series : seriesList) {
+                    if (series.getTitle().equalsIgnoreCase(seleact) && series.matchesGenre(genreName)) {
+                        ui.displayMsg("Now playing: " + series.getTitle());
+                        ui.displayMsg(series.getTitle() + " is playing...");
+                        ui.displayMsg(series.getTitle() + " is finished");
+                        ui.displayMsg("Returning to menu");
+                        foundMatch = true;
+                        break;
+                    }
+                }
+
+                if (foundMatch) break; // stopper hvis der blev fundet en titel
+                else ui.displayMsg("No match found for that title under genre: " + genreName + ", try again.");
+            }
+            break;
         }
-
-        // If nothing was found
-        if (!genreIsFound) {
-            ui.displayMsg("No movies or series found with this genre: " + genreName);
-
-        }
-
-
     }
+
+
+
 
 
     //This method will show all the Movies
