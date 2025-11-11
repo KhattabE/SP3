@@ -226,25 +226,15 @@ public class MainMenu {
 
             switch (choice) {
                 case 1 -> {
-                    ui.displayMsg("All movies available: ");
-                    listAllMovies();
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
-
+                    chooseMovieFromList();
                 }
 
                 case 2 -> {
-                    ui.displayMsg("All series available: ");
-                    listAllSeries();
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    chooseSeriesFromList();
                 }
 
                 case 3 -> {
                     searchAfterMedia();
-
                 }
 
                 case 4 -> {
@@ -287,6 +277,49 @@ public class MainMenu {
             }
         }
     }
+
+
+    // Method for movie listing and choosing a movie or returning to menu
+    public void chooseMovieFromList() {
+        ui.displayMsg("All of the available movies: ");
+        listAllMovies();
+
+        String choice = ui.promptText("Type 1 to choose a movie or 0 to return: ");
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to menu");
+            return;
+        }
+        while (!choice.equals("1") && !choice.equals("0")) {
+            choice = ui.promptText("invalid choice please type 1 or 0: ");
+        }
+
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to main menu");
+            return;
+        }
+
+
+        String userChoice = ui.promptText("Enter the exact name of the movie: ");
+        boolean isFound = false;
+
+        for (Movie m : movieList) {
+            if (m.getTitle().equalsIgnoreCase(userChoice)) {
+                ui.displayMsg("Now playing: " + m.getTitle());
+                ui.displayMsg(m.getTitle() + " is playing...");
+                ui.displayMsg(m.getTitle() + " has finished playing.");
+                isFound = true;
+                break;
+            }
+        }
+
+        if (!isFound) ui.displayMsg("The movie does not exist.");
+        ui.promptText("Type 0 to return to menu: ");
+    }
+
+
+
+
+
 
     //This method is for searching for movie
     public void searchAfterMedia() {
@@ -350,6 +383,45 @@ public class MainMenu {
             }
 
         }
+    }
+
+    // Method for series listing and choosing a series or returning to menu
+    public void chooseSeriesFromList() {
+        ui.displayMsg("All of the available series: ");
+        listAllSeries();
+
+        String choice = ui.promptText("Type 1 to choose a series or 0 to return: ");
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to menu");
+            return;
+        }
+        while (!choice.equals("1") && !choice.equals("0")) {
+            choice = ui.promptText("Invalid choice, please type 1 or 0: ");
+        }
+
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to main menu");
+            return;
+        }
+
+        String userChoice = ui.promptText("Enter the exact name of the series: ");
+        boolean isFound = false;
+
+        for (Series s : seriesList) {
+            if (s.getTitle().equalsIgnoreCase(userChoice)) {
+                ui.displayMsg("Now playing: " + s.getTitle());
+                ui.displayMsg(s.getTitle() + " is playing...");
+                ui.displayMsg(s.getTitle() + " has finished playing.");
+                isFound = true;
+                break;
+            }
+        }
+
+        if (!isFound) {
+            ui.displayMsg("The series does not exist.");
+        }
+
+        ui.promptText("Type 0 to return to menu: ");
     }
 
     // thid method is to find all media under a searched genre
