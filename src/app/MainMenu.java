@@ -57,7 +57,6 @@ public class MainMenu {
         loadSeriesFromFile(); //Loads series from csv at start
 
 
-
         boolean isRunning = true;
         while (isRunning) {
             ui.displayMsg("\nWelcome to the streaming service AEMK Entertainments!");
@@ -219,8 +218,8 @@ public class MainMenu {
             ui.displayMsg("5: Save movies/series");
             ui.displayMsg("6: List over saved movies/series");
             ui.displayMsg("7: List over seen movies/series");
-            ui.displayMsg("8: Back to user menu");
-            ui.displayMsg("0: Log-out");
+            ui.displayMsg("8: Log-out and return to user menu");
+            ui.displayMsg("0: Exit AEMK Entertainments");
 
             // Ask the user for a choice
             int choice = ui.promptNumeric("Enter your choice: ");
@@ -230,7 +229,8 @@ public class MainMenu {
                     ui.displayMsg("All movies available: ");
                     listAllMovies();
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
 
                 }
 
@@ -238,140 +238,164 @@ public class MainMenu {
                     ui.displayMsg("All series available: ");
                     listAllSeries();
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
-
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
                 }
 
                 case 3 -> {
                     searchAfterMedia();
 
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
-
                 }
 
-                case 4 ->{
+                case 4 -> {
                     searchAfterSameGenreMedia();
 
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
+                    String input = ui.promptText("Try again or type 0 to return to menu");
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
 
 
                 }
 
-                case 5 ->{
+                case 5 -> {
                     savedMediaList();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
-
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
                 }
 
-                case 6 ->{
+                case 6 -> {
 
                     listOverSavedMedia();
 
                     String input = ui.promptText("Type 0 to return to menu: ");
-                    if (input.equals("0")) continue;
-
-
-                }
-                case 7 ->{
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
 
                 }
+                case 7 -> {
 
-                case 8-> {
-                    ui.displayMsg("Returning to user menu");
+                }
+
+                case 8 -> {
+                    ui.displayMsg("Logging out and returning to user menu");
                     return;
                 }
 
                 case 0 -> {
-                    ui.displayMsg("Logging out...");
+                    ui.displayMsg("Closing AEMK Entertainments!");
                     currentUser = null; // Set to null which means that no user is logged in anymore
+                    System.exit(0); // Closes program
                 }
 
                 default -> ui.displayMsg("Invalid choice, please try again.");
-            }
-
-            // If the user logs out then go back to main menu
-            if (currentUser == null) {
-                break;
             }
         }
     }
 
     //This method is for searching for movie
-    public void searchAfterMedia(){
+    public void searchAfterMedia() {
         String mediaName = ui.promptText("Enter the name of the movie/series you are searching for: ");
+        while (true) {
+            boolean isFound = false;
 
-        boolean isFound = false;
+            //Loops through the movieList arraylist
+            for (Movie movie : movieList) {
+                //Checks if the movie title equals what the user have written
+                if (movie.getTitle().equalsIgnoreCase(mediaName)) {
+                    ui.displayMsg("Movie Found!");
+                    //Shows info about the movie
+                    movie.displayInfo();
+                    ui.displayMsg("");
 
-        //Loops through the movieList arraylist
-        for(Movie movie : movieList){
-            //Checks if the movie title equals what the user have written
-            if(movie.getTitle().equalsIgnoreCase(mediaName)){
-                ui.displayMsg("Movie Found!");
-                //Shows info about the movie
-                movie.displayInfo();
-                isFound = true;
+                    String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
+                    if (choice.equals("1")) {
+                        ui.displayMsg("Now playing: " + movie.getTitle());
+                        ui.displayMsg(movie.getTitle() + " playing...");
+                        ui.displayMsg(movie.getTitle() + " is finished");
+                        ui.displayMsg("Returning to menu");
+                    }
+                    isFound = true;
+                    break;
+                }
+            }
+
+            //Loops through the seriesList arraylist
+            for (Series series : seriesList) {
+                //Checks if the series title equals what the user have written
+                if (series.getTitle().equalsIgnoreCase(mediaName)) {
+                    ui.displayMsg("Series Found!");
+                    series.displayInfo();
+                    ui.displayMsg("");
+
+                    String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
+                    if (choice.equals("1")) {
+                        ui.displayMsg("Now playing: " + series.getTitle());
+                        ui.displayMsg(series.getTitle() + " playing...");
+                        ui.displayMsg(series.getTitle() + " is finished");
+                        ui.displayMsg("Returning to menu");
+                    }
+                    isFound = true;
+                    break;
+                }
 
             }
-        }
+            if (!isFound) {
+                ui.displayMsg("");
+                ui.displayMsg("No movie or series found with the given name!");
+                String input = ui.promptText("Try again or type 0 to return to menu");
 
-        //Loops through the seriesList arraylist
-        for(Series series : seriesList){
-            //Checks if the series title equals what the user have written
-            if(series.getTitle().equalsIgnoreCase(mediaName)){
-                ui.displayMsg("Series Found!");
-                series.displayInfo();
-                isFound = true;
+
+                if (input.equals("0")) {
+                    return;
+                }
+                mediaName = input;
+            } else {
                 break;
             }
+
         }
-
-        if(!isFound){
-            ui.displayMsg("No movie or series found with the given name!");
-        }
-
-
-
     }
 
-
     //Method to find all media under a searched genre
-    public void searchAfterSameGenreMedia(){
+    public void searchAfterSameGenreMedia() {
         String genreName = ui.promptText("Enter the genre, to see all media from that genre: ");
 
         boolean genreIsFound = false;
 
         //Searches through all movies
-        for(Movie movie : movieList){
-            if(movie.matchesGenre(genreName)){
-                ui.displayMsg("We have found all movies that matches this genre!");
+        for (Movie movie : movieList) {
+            if (movie.matchesGenre(genreName)) {
+                if (!genreIsFound) {
+                    ui.displayMsg("We have found all movies that match " + genreName + "!");
+                    genreIsFound = true;
+                }
                 movie.displayInfo();
-                genreIsFound = true;
+                ui.displayMsg("");
             }
         }
 
         // Search through all series
         for (Series series : seriesList) {
             if (series.matchesGenre(genreName)) {
-                ui.displayMsg("We have found all series that match this genre!");
+                if (!genreIsFound) {
+                    ui.displayMsg("We have found all series that match " + genreName + "!");
+                    genreIsFound = true;
+                }
                 series.displayInfo();
-                genreIsFound = true;
+                ui.displayMsg("");
             }
         }
 
         // If nothing was found
         if (!genreIsFound) {
-            ui.displayMsg("No movies or series found with theis genre: " + genreName);
-            
+            ui.displayMsg("No movies or series found with this genre: " + genreName);
+
         }
 
 
-
     }
-
 
 
     //This method will show all the Movies
@@ -415,7 +439,7 @@ public class MainMenu {
     }
 
     //Method to save media to a saved list
-    public void savedMediaList(){
+    public void savedMediaList() {
 
         ui.displayMsg("Would you like to save a movie or a series?");
         ui.displayMsg("1: Save a movie");
@@ -425,14 +449,14 @@ public class MainMenu {
         boolean isFound = false;
 
         //an if statment to check which choice the user makes
-        if(choice == 1){
+        if (choice == 1) {
             //This is where the user will write the movie name
             String name = ui.promptText("Enter the exact name of the movie you want to save: ");
 
-            for(Movie movie : movieList){
+            for (Movie movie : movieList) {
 
                 //If statment to check if the movie exists or not
-                if(name.equalsIgnoreCase(movie.getTitle())){
+                if (name.equalsIgnoreCase(movie.getTitle())) {
                     ui.displayMsg("Movie found!");
                     savedList.add(movie);
                     ui.displayMsg("Movie saved successfully!");
@@ -443,16 +467,16 @@ public class MainMenu {
             }
 
 
-        } else if(choice == 2){
+        } else if (choice == 2) {
 
             //This is where the user will write the series name
             String name = ui.promptText("Enter the exact name of the series you want to save: ");
 
-            for(Series series : seriesList){
+            for (Series series : seriesList) {
 
 
                 //If statment to check if the movie exists or not
-                if(name.equalsIgnoreCase(series.getTitle())){
+                if (name.equalsIgnoreCase(series.getTitle())) {
                     ui.displayMsg("Series found!");
                     savedList.add(series);
                     ui.displayMsg("Series saved successfully!");
@@ -487,9 +511,6 @@ public class MainMenu {
             savedL.displayInfo();
         }
     }
-
-
-
 
 
     // Helper method to check if a user's email already exists
@@ -550,7 +571,6 @@ public class MainMenu {
             }
 
 
-
             // Reads all genres from the remaining columns
             ArrayList<String> genres = new ArrayList<>();
             for (int i = 2; i < parts.length - 1; i++) {  // notice "-1" here
@@ -570,7 +590,6 @@ public class MainMenu {
         // This is just fedback to make sure it worked
         ui.displayMsg("Loaded " + movieList.size() + " movies from file!");
     }
-
 
 
     // So this method loads all series from the csv file and stores them in the seriesList
@@ -727,10 +746,6 @@ public class MainMenu {
         // This is just feedback to make sure it worked
         ui.displayMsg("Loaded " + savedList.size() + " saved media for " + currentUser.getName() + "!");
     }
-
-
-
-
 
 
 }
