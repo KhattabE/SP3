@@ -41,6 +41,8 @@ public abstract class Media implements MedieFunctions {
         return rating;
     }
 
+    // This method returns the type of the media (Movie or Series)
+    public abstract String getType();
 
 
 

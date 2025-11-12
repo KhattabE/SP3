@@ -21,6 +21,11 @@ public class Movie extends Media  {
     }
 
 
+    // This method returns the type of the media
+    @Override
+    public String getType() {
+        return "Movie";
+    }
 
     //Getters
     public double getMovieLength() {

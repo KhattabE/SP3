@@ -695,9 +695,12 @@ public class MainMenu {
         // Goes through every media item that the user has saved
         for (Media media : savedList) {
 
+            // The media object returns its own type (Movie or Series)
+            String type = media.getType();
+
             // Creates one single line of text for this media
-            String line = currentUser.getName() + ";" +
-                    "Media" + ";" +
+            String line = currentUser.getMail() + ";" +
+                    type + ";" +
                     media.getTitle() + ";" +
                     media.getReleaseYear() + ";" +
                     media.getRating();
