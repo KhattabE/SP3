@@ -17,6 +17,8 @@ public class MainMenu {
     private String movieFilePath = "movies.csv";
     private String seriesFilePath = "series.csv";
     private String savedMediaFilePath = "data/savedMedia.csv";
+    private String seenMediaFilePath = "data/seenMedia.csv";
+
 
 
     // These are lists to hold all of the movies, series, and users.
@@ -40,6 +42,7 @@ public class MainMenu {
         this.userFilePath = userFilePath;
         this.movieFilePath = movieFilePath;
         this.seriesFilePath = seriesFilePath;
+        this.seenMediaFilePath = "data/seenMedia.csv";
 
         // Initialize all of the lists and the UI
         this.ui = new UIText();
@@ -78,10 +81,13 @@ public class MainMenu {
 
             // If a user is logged in it then opens the user menu
             if (currentUser != null) {
+                loadSavedMediaFromFile(); // loader saved media
+                loadSeenMediaFromFile();  // LOADER SEEN MEDIA
                 showUserMenu();
             }
         }
     }
+
 
     // This method loads users from a file using FileIO
     public void loadUsersFromFile() {
@@ -175,10 +181,16 @@ public class MainMenu {
 
                 }
                 case 7 -> {
+                    listOverSeenMedia();
+                    String input = ui.promptText("Type 0 to return to menu: ");
+                    while (!input.equals("0"))
+                        input = ui.promptText("Please type 0 to return to menu: ");
 
                 }
 
                 case 8 -> {
+                    saveSavedMediaToFile();
+                    saveSeenMediaToFile();
                     ui.displayMsg("Logging out and returning to user menu");
                     return;
                 }
@@ -186,11 +198,25 @@ public class MainMenu {
                 case 0 -> {
                     ui.displayMsg("Closing AEMK Entertainments!");
                     currentUser = null; // Set to null which means that no user is logged in anymore
+                    saveSavedMediaToFile();
+                    saveSeenMediaToFile();
                     System.exit(0); // Closes program
                 }
 
                 default -> ui.displayMsg("Invalid choice, please try again.");
             }
+        }
+    }
+
+    public void listOverSeenMedia(){
+        if(seenList.isEmpty()){
+            ui.displayMsg("You have not watched any movies or series yet");
+            return;
+        }
+        ui.displayMsg("Seen media:");
+        for (Media media : seenList){
+            ui.displayMsg("");
+            media.displayInfo();
         }
     }
 
@@ -221,6 +247,7 @@ public class MainMenu {
         for (Movie m : movieList) {
             if (m.getTitle().equalsIgnoreCase(userChoice)) {
                 m.play(ui);
+                seenList.add(m);
                 isFound = true;
                 break;
             }
@@ -229,6 +256,11 @@ public class MainMenu {
         if (!isFound) ui.displayMsg("The movie does not exist.");
         ui.promptText("Type 0 to return to menu: ");
     }
+
+
+
+
+
 
     //This method is for searching for movie
     public void searchAfterMedia() {
@@ -315,6 +347,7 @@ public class MainMenu {
         for (Series s : seriesList) {
             if (s.getTitle().equalsIgnoreCase(userChoice)) {
                 s.play(ui);
+                seenList.add(s);
                 isFound = true;
                 break;
             }
@@ -734,6 +767,63 @@ public class MainMenu {
 
         // This is just feedback to make sure it worked
         ui.displayMsg("Loaded " + savedList.size() + " saved media for " + currentUser.getName() + "!");
+    }
+
+    // DETTER gemmner alle sete film/serier til en CSV-fil
+    public void saveSeenMediaToFile() {
+        ArrayList<String> lines = new ArrayList<>();
+
+        for (Media media : seenList) {
+            String type = (media instanceof Movie) ? "Movie" : "Series";
+            String line = currentUser.getName() + ";" +
+                    type + ";" +
+                    media.getTitle() + ";" +
+                    media.getReleaseYear() + ";" +
+                    media.getRating();
+            lines.add(line);
+        }
+
+        io.saveData(lines, seenMediaFilePath, "userName;mediaType;title;year;rating");
+        ui.displayMsg("Saved " + seenList.size() + " seen media to seenMedia.csv!");
+    }
+
+    // denne loader alle sete film/serier fra CSV-fil
+    public void loadSeenMediaFromFile() {
+        seenList.clear();
+        ArrayList<String> lines = io.readData(seenMediaFilePath);
+
+        for (String line : lines) {
+            String[] parts = line.split(";");
+            if (parts.length < 5) continue;
+
+            String name = parts[0].trim();
+            if (!name.equalsIgnoreCase(currentUser.getName())) continue;
+
+            String type = parts[1].trim();
+            String title = parts[2].trim();
+
+            int year = 0;
+            try {
+                year = Integer.parseInt(parts[3].trim());
+            } catch (Exception e) {
+                continue;
+            }
+
+            double rating = 0.0;
+            try {
+                rating = Double.parseDouble(parts[4].trim().replace(",", "."));
+            } catch (Exception e) {
+                // rating forbliver 0.0
+            }
+
+            if (type.equalsIgnoreCase("Movie")) {
+                seenList.add(new Movie(title, new ArrayList<>(), year, rating, ui, 0));
+            } else if (type.equalsIgnoreCase("Series")) {
+                seenList.add(new Series(title, new ArrayList<>(), year, rating, 0, 0, 0));
+            }
+        }
+
+        ui.displayMsg("Loaded " + seenList.size() + " seen media for " + currentUser.getName() + "!");
     }
 
 
