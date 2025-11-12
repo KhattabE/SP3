@@ -49,15 +49,16 @@ public abstract class Media implements MedieFunctions {
         this.rating = rating;
     }
 
-    //Method for checking if the media contains the given genre (this will be used for filtering/search)
     public boolean matchesGenre(String genre) {
+        String search = genre.trim().toLowerCase();
         for (String genre1 : genres) {
-            if (genre1.equalsIgnoreCase(genre)) {
-                return true; // found a match, stop checking
+            if (genre1.trim().toLowerCase().contains(search)) {
+                return true;
             }
         }
-        return false; // no match found after checking all
+        return false;
     }
+
 
 
 
@@ -120,6 +121,7 @@ public abstract class Media implements MedieFunctions {
         ui.displayMsg(title + " is playing...");
         ui.displayMsg(title + " has finished playing.");
     }
+
 
 
 
