@@ -115,6 +115,12 @@ public abstract class Media implements MedieFunctions {
         return fileLine;
     }
 
+    public void play(UIText ui) {
+        ui.displayMsg("Now playing: " + title);
+        ui.displayMsg(title + " is playing...");
+        ui.displayMsg(title + " has finished playing.");
+    }
+
 
 
 
