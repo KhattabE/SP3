@@ -3,6 +3,7 @@ package app;
 import app.util.UIText;
 import app.util.FileIO;
 
+
 import java.util.ArrayList;
 
 public class MainMenu {
@@ -69,8 +70,8 @@ public class MainMenu {
 
             // a Switch case to handle the users choice
             switch (choice) {
-                case 1 -> login();            // if 1 then Login to an existing account
-                case 2 -> createAccount();    // if 2 then Create a new user account
+                case 1 -> currentUser = User.login(ui, users); // if 1 then Login to an existing account
+                case 2 -> currentUser = User.createAccount(ui, users);   // if 2 then Create a new user account
                 case 0 -> isRunning = false; // if 0 then Exit the program
                 default -> ui.displayMsg("Invalid choice, please try again.");
             }
@@ -80,91 +81,6 @@ public class MainMenu {
                 showUserMenu();
             }
         }
-    }
-
-    // A valid mail method so it has to follow critirias to process
-    public boolean validMail(String mail) {
-        if (mail == null) return false;
-
-        return (mail.contains("@") && mail.contains(".") && mail.indexOf("@") < mail.lastIndexOf(".") &&
-                (mail.contains("live") || mail.contains("gmail") || mail.contains("outlook") || mail.contains("hotmail")) &&
-                !((mail.contains("gmail") && mail.indexOf("gmail") > mail.lastIndexOf(".")) ||
-                        (mail.contains("live") && mail.indexOf("live") > mail.lastIndexOf(".")) ||
-                        (mail.contains("outlook") && mail.indexOf("outlook") > mail.lastIndexOf(".")) ||
-                        (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf("."))));
-    }
-
-    // Lets a user log in with his/her email and password
-    public void login() {
-        while (true) {
-            String mail = ui.promptText("Email: ");
-
-            while (!validMail(mail)) {
-                mail = ui.promptText("Please enter a valid email!: ");
-            }
-
-            String code = ui.promptText("Password: ");
-
-            // Finds the user with that email which is entered
-            User u = findUserMail(mail);
-
-            // Checks if the user does exist and that the password matches
-            if (u != null && u.getCode().equals(code)) {
-                currentUser = u;
-                ui.displayMsg("Successfully logged in as " + u.getName());
-                loadSavedMediaFromFile(); //Loads savedMedia csv at start
-                break;
-            }
-            ui.displayMsg("Wrong email or password");
-
-            int choice = ui.promptNumeric("Type 1 to try again, or type 0 to exit to main menu");
-
-            if (choice == 0) {
-                ui.displayMsg("Exiting to main menu");
-                return;
-            } else if (choice != 1) {
-                ui.displayMsg("Invalid input");
-            }
-        }
-    }
-
-    // Creates a new user account
-    public void createAccount() {
-        String name = ui.promptText("Enter a name: ");
-        String mail = ui.promptText("Enter an email: ");
-
-        while (!validMail(mail)) {
-            mail = ui.promptText("Please enter a valid email!: ");
-        }
-
-        String code = ui.promptText("Enter a password (4 chars at least) ");
-
-        //A while loop to make sure the users code is at least 4 chars long
-        while (code.length() < 4) {
-            code = ui.promptText("Try again! the password must be 4 chars at least! ");
-        }
-
-        // Just to show what is being created
-        ui.displayMsg("Creating account for: " + name + " (" + mail + ") ");
-
-        // Checks if the mail already exists
-        User found = findUserMail(mail);
-        if (found != null) {
-            ui.displayMsg("Email already exists, please try another email");
-            return; // stops so there won't be created 2 of the same ac's
-        }
-
-        // Creates a new user and adds to the list
-        User u = new User(name, mail, code);
-        users.add(u);
-
-        // Logs the user in
-        currentUser = u;
-
-        ui.displayMsg("Account has been created. You are now logged in as " + name + ".");
-
-        // Save updated users list to file
-        saveUsersToFile();
     }
 
     // This method loads users from a file using FileIO
@@ -226,35 +142,19 @@ public class MainMenu {
 
             switch (choice) {
                 case 1 -> {
-                    ui.displayMsg("All movies available: ");
-                    listAllMovies();
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
-
+                    chooseMovieFromList();
                 }
 
                 case 2 -> {
-                    ui.displayMsg("All series available: ");
-                    listAllSeries();
-                    String input = ui.promptText("Type 0 to return to menu: ");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
+                    chooseSeriesFromList();
                 }
 
                 case 3 -> {
                     searchAfterMedia();
-
                 }
 
                 case 4 -> {
                     searchAfterSameGenreMedia();
-
-                    String input = ui.promptText("Try again or type 0 to return to menu");
-                    while (!input.equals("0"))
-                        input = ui.promptText("Please type 0 to return to menu: ");
-
-
                 }
 
                 case 5 -> {
@@ -294,6 +194,42 @@ public class MainMenu {
         }
     }
 
+
+    // Method for movie listing and choosing a movie or returning to menu
+    public void chooseMovieFromList() {
+        ui.displayMsg("All of the available movies: ");
+        listAllMovies();
+
+        String choice = ui.promptText("Type 1 to choose a movie or 0 to return: ");
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to menu");
+            return;
+        }
+        while (!choice.equals("1") && !choice.equals("0")) {
+            choice = ui.promptText("invalid choice please type 1 or 0: ");
+        }
+
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to main menu");
+            return;
+        }
+
+
+        String userChoice = ui.promptText("Enter the exact name of the movie: ");
+        boolean isFound = false;
+
+        for (Movie m : movieList) {
+            if (m.getTitle().equalsIgnoreCase(userChoice)) {
+                m.play(ui);
+                isFound = true;
+                break;
+            }
+        }
+
+        if (!isFound) ui.displayMsg("The movie does not exist.");
+        ui.promptText("Type 0 to return to menu: ");
+    }
+
     //This method is for searching for movie
     public void searchAfterMedia() {
         String mediaName = ui.promptText("Enter the name of the movie/series you are searching for: ");
@@ -311,9 +247,7 @@ public class MainMenu {
 
                     String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
                     if (choice.equals("1")) {
-                        ui.displayMsg("Now playing: " + movie.getTitle());
-                        ui.displayMsg(movie.getTitle() + " playing...");
-                        ui.displayMsg(movie.getTitle() + " is finished");
+                        movie.play(ui);
                         ui.displayMsg("Returning to menu");
                     }
                     isFound = true;
@@ -331,9 +265,7 @@ public class MainMenu {
 
                     String choice = ui.promptText("Type 0 to exit or type 1 to play " + mediaName);
                     if (choice.equals("1")) {
-                        ui.displayMsg("Now playing: " + series.getTitle());
-                        ui.displayMsg(series.getTitle() + " playing...");
-                        ui.displayMsg(series.getTitle() + " is finished");
+                        series.play(ui);
                         ui.displayMsg("Returning to menu");
                     }
                     isFound = true;
@@ -358,43 +290,120 @@ public class MainMenu {
         }
     }
 
-    //Method to find all media under a searched genre
+    // Method for series listing and choosing a series or returning to menu
+    public void chooseSeriesFromList() {
+        ui.displayMsg("All of the available series: ");
+        listAllSeries();
+
+        String choice = ui.promptText("Type 1 to choose a series or 0 to return: ");
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to menu");
+            return;
+        }
+        while (!choice.equals("1") && !choice.equals("0")) {
+            choice = ui.promptText("Invalid choice, please type 1 or 0: ");
+        }
+
+        if (choice.equals("0")) {
+            ui.displayMsg("Returning to main menu");
+            return;
+        }
+
+        String userChoice = ui.promptText("Enter the exact name of the series: ");
+        boolean isFound = false;
+
+        for (Series s : seriesList) {
+            if (s.getTitle().equalsIgnoreCase(userChoice)) {
+                s.play(ui);
+                isFound = true;
+                break;
+            }
+        }
+
+        if (!isFound) {
+            ui.displayMsg("The series does not exist.");
+        }
+
+        ui.promptText("Type 0 to return to menu: ");
+    }
+
+    // thid method is to find all media under a searched genre
     public void searchAfterSameGenreMedia() {
         String genreName = ui.promptText("Enter the genre, to see all media from that genre: ");
 
-        boolean genreIsFound = false;
+        while (true) {
+            boolean genreIsFound = false;
 
-        //Searches through all movies
-        for (Movie movie : movieList) {
-            if (movie.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all movies that match " + genreName + "!");
-                    genreIsFound = true;
+            ui.displayMsg("");
+
+            // showing all movies
+
+            for (Movie movie : movieList) {
+                if (movie.matchesGenre(genreName)) {
+                    if (!genreIsFound) {
+                        ui.displayMsg("**** All movies and series in " + genreName + " *****");
+                        ui.displayMsg("");
+                        genreIsFound = true;
+                    }
+                    movie.displayInfo();
+                    ui.displayMsg("");
                 }
-                movie.displayInfo();
-                ui.displayMsg("");
             }
-        }
 
-        // Search through all series
-        for (Series series : seriesList) {
-            if (series.matchesGenre(genreName)) {
-                if (!genreIsFound) {
-                    ui.displayMsg("We have found all series that match " + genreName + "!");
-                    genreIsFound = true;
+            // shows all series
+            for (Series series : seriesList) {
+                if (series.matchesGenre(genreName)) {
+                    if (!genreIsFound) {
+                        ui.displayMsg("**** All series and movies in " + genreName + " *****");
+                        ui.displayMsg("");
+                        genreIsFound = true;
+                    }
+                    series.displayInfo();
+                    ui.displayMsg("");
                 }
-                series.displayInfo();
-                ui.displayMsg("");
             }
+
+            // if no series or movie is found
+            if (!genreIsFound) {
+                ui.displayMsg("No movies or series found with the genre: " + genreName);
+                String input = ui.promptText("Try again or type 0 to return to menu");
+                if (input.equals("0")) return;
+                genreName = input;
+                continue;
+            }
+
+            // asks user which one to play
+            while (true) {
+                String seleact = ui.promptText("Type the exact title you want to play or 0 to return to menu");
+                if (seleact.equals("0")) return;
+
+                boolean foundMatch = false;
+
+                // Playing the movie
+                for (Movie movie : movieList) {
+                    if (movie.getTitle().equalsIgnoreCase(seleact) && movie.matchesGenre(genreName)) {
+                        movie.play(ui);
+                        ui.displayMsg("Returning to menu");
+                        foundMatch = true;
+                        break;
+                    }
+                }
+
+                // playing the series
+                for (Series series : seriesList) {
+                    if (series.getTitle().equalsIgnoreCase(seleact) && series.matchesGenre(genreName)) {
+                        series.play(ui);
+                        ui.displayMsg("Returning to menu");
+                        foundMatch = true;
+                        break;
+                    }
+                }
+
+                if (foundMatch) break; // stopper hvis der blev fundet en titel
+                else ui.displayMsg("No match found for that title under genre: " + genreName + ", try again.");
+            }
+            break;
         }
-
-        // If nothing was found
-        if (!genreIsFound) {
-            ui.displayMsg("No movies or series found with this genre: " + genreName);
-
-        }
-
-
     }
 
 
@@ -463,7 +472,6 @@ public class MainMenu {
                     isFound = true;
                     break;
                 }
-
             }
 
 
@@ -485,8 +493,6 @@ public class MainMenu {
                 }
 
             }
-
-
         }
 
         if (!isFound) {
@@ -511,23 +517,6 @@ public class MainMenu {
             savedL.displayInfo();
         }
     }
-
-
-    // Helper method to check if a user's email already exists
-    private User findUserMail(String mail) {
-
-        // Loops through every user in the list
-        for (User u : users) {
-
-            // Checks if the user mail matches
-            if (u.getMail().equalsIgnoreCase(mail)) {
-                return u; // Return this user if found
-            }
-        }
-        // If no user has that mail then return null
-        return null;
-    }
-
 
     // Loads all movies from the csv file and stores them in the movieList
     public void loadMoviesFromFile() {
