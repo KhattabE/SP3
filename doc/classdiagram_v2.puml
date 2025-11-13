@@ -11,13 +11,11 @@ class MainMenu {
     -String seriesFilePath
     -String savedMediaFilePath
     -String seenMediaFilePath
-
     -ArrayList<Movie> movieList
     -ArrayList<Series> seriesList
     -ArrayList<User> users
     -ArrayList<Media> savedList
     -ArrayList<Media> seenList
-
     -User currentUser
 
     +MainMenu(String userFilePath, String movieFilePath, String seriesFilePath)
@@ -49,7 +47,6 @@ abstract class Media {
     -ArrayList<String> genres
     -int releaseYear
     -double rating
-
     +String getTitle()
     +ArrayList<String> getGenres()
     +int getReleaseYear()
@@ -58,7 +55,6 @@ abstract class Media {
     +void displayInfo()
     +void play(UIText)
     +abstract String getType()
-
     +static void searchAfterMedia(UIText, ArrayList<Movie>, ArrayList<Series>)
     +static void saveMedia(UIText, ArrayList<Movie>, ArrayList<Series>, ArrayList<Media>)
 }
