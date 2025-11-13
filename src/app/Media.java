@@ -4,7 +4,7 @@ import app.util.UIText;
 
 import java.util.ArrayList;
 
-public abstract class Media implements MedieFunctions {
+public abstract class Media {
 
     //UIText object, so we can use them instead of "System.out.print"
     UIText ui = new UIText();
@@ -46,11 +46,6 @@ public abstract class Media implements MedieFunctions {
 
 
 
-    //Setter to make the fields writable
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
     public boolean matchesGenre(String genre) {
         String search = genre.trim().toLowerCase();
         for (String genre1 : genres) {
@@ -58,21 +53,6 @@ public abstract class Media implements MedieFunctions {
                 return true;
             }
         }
-        return false;
-    }
-
-
-
-
-    // Method for checking if the media title contains the given search string (This will be used for title search)
-    public boolean matchesTitle(String titles){
-
-        if (this.title.toLowerCase().contains(titles.toLowerCase())){ //This will even match, if you write "Titan" instead of "Titanic"
-            ui.displayMsg("Title match found!");
-            return true;
-        }
-
-        ui.displayMsg("No title match found!");
         return false;
     }
 
@@ -101,22 +81,6 @@ public abstract class Media implements MedieFunctions {
     }
 
 
-    public String toFileString() {
-
-        //We start with title and release year, separated by semicolon
-        String fileLine = title + ";" + releaseYear + ";";
-
-        //this loops through each genre and add the genre name to the line
-        for (String g : genres) {
-            fileLine += g + ";";
-        }
-
-        //this adds the rating at the end followed by semicolon
-        fileLine += rating + ";";
-
-        //This returns the full line
-        return fileLine;
-    }
 
     public void play(UIText ui) {
         ui.displayMsg("Now playing: " + title);
@@ -127,21 +91,6 @@ public abstract class Media implements MedieFunctions {
 
 
 
-
-    @Override
-    public void medieIsPlaying(){
-        ui.displayMsg("The Media is now playing...");
-    }
-
-    @Override
-    public void medieIsPaused(){
-        ui.displayMsg("The Media has been paused...");
-    }
-
-    @Override
-    public void medieIsEnded(){
-        ui.displayMsg("The Media has been ended...");
-    }
 
 
 

@@ -51,30 +51,5 @@ public class FileIO {
         return data; // This returns all lines as a list
     }
 
-    // This reads a specific number of lines from a file
-    public String[] readData(String path, int length) {
-        String[] data = new String[length];
-        File file = new File(path);
-
-        try {
-            Scanner scan = new Scanner(file); // This opens the file for reading
-
-            if (scan.hasNextLine()) {
-                scan.nextLine(); // This skips the first line
-            }
-
-            // This reada to the length of the lines and store them in the array
-            for (int i = 0; i < length && scan.hasNextLine(); i++) {
-                data[i] = scan.nextLine();
-            }
-
-            scan.close(); // This closes the file when done
-        } catch (Exception e) {
-            System.out.println("Could not read file: " + e.getMessage());
-        }
-
-        return data; // Finally this returns all lines which are read as an array
-    }
-
 
 }
