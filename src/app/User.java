@@ -1,24 +1,23 @@
 package app;
 
+import app.util.FileIO;
 import app.util.UIText;
 
 import java.util.ArrayList;
 
-
-
 public class User {
-    // user information
+
+    // Basic user information
     private String name;
     private String mail;
     private String code;
 
-    // Lists that stores the user media
+    // Lists that store the user's media (not used yet, but ready for later features)
     private ArrayList<Media> seenList;
     private ArrayList<Media> favoriteList;
     private ArrayList<Media> continueList;
 
-
-    // Constructor
+    // Constructor to create a new user with name, email and password
     public User(String name, String mail, String code) {
         this.name = name;
         this.mail = mail;
@@ -38,8 +37,7 @@ public class User {
         return code;
     }
 
-
-    // A valid mail method so it has to follow critirias to process
+    // Checks if an email is valid based on some simple rules
     public static boolean isValidMail(String mail) {
         if (mail == null) return false;
 
@@ -51,18 +49,19 @@ public class User {
                         (mail.contains("hotmail") && mail.indexOf("hotmail") > mail.lastIndexOf("."))));
     }
 
-    // Lets a user log in with his/her email and password
+    // Lets a user log in with their email and password
     public static User login(UIText ui, ArrayList<User> users) {
         while (true) {
             String mail = ui.promptText("Email: ");
 
+            // Validate email format
             while (!isValidMail(mail)) {
                 mail = ui.promptText("Please enter a valid email!: ");
             }
 
             String code = ui.promptText("Password: ");
 
-            // Finds the user with that email which is entered
+            // Find the user with the entered email
             User u = null;
             for (User existing : users) {
                 if (existing.getMail().equalsIgnoreCase(mail)) {
@@ -71,15 +70,15 @@ public class User {
                 }
             }
 
-            // Checks if the user exists and password matches
+            // Check if user exists and password matches
             if (u != null && u.getCode().equals(code)) {
                 ui.displayMsg("Successfully logged in as " + u.getName());
-                return u; // return user to MainMenu
+                return u; // Return the logged in user to MainMenu
             }
 
             ui.displayMsg("Wrong email or password");
 
-            int choice = ui.promptNumeric("Type 1 to try again, or type 0 to exit to main menu");
+            int choice = ui.promptNumeric("Type 1 to try again, or type 0 to exit to main menu: ");
 
             if (choice == 0) {
                 ui.displayMsg("Exiting to main menu");
@@ -90,45 +89,88 @@ public class User {
         }
     }
 
-
-    // Creates a new user account
+    // Creates a new user account and returns it
     public static User createAccount(UIText ui, ArrayList<User> users) {
         String name = ui.promptText("Enter a name: ");
         String mail = ui.promptText("Enter an email: ");
 
+        // Validate email
         while (!isValidMail(mail)) {
             mail = ui.promptText("Please enter a valid email!: ");
         }
 
         String code = ui.promptText("Enter a password (at least 4 characters): ");
 
-        //A while loop to make sure the users code is at least 4 chars long
+        // Make sure the password has at least 4 characters
         while (code.length() < 4) {
-            code = ui.promptText("Try again! the password must be at least 4 characters! ");
+            code = ui.promptText("Try again! The password must be at least 4 characters! ");
         }
 
-        // Just to show what is being created
+        // Show what is being created
         ui.displayMsg("Creating account for: " + name + " (" + mail + ") ");
 
-        // Checks if the mail already exists
+        // Check if the email already exists
         for (User existing : users) {
             if (existing.getMail().equalsIgnoreCase(mail)) {
                 ui.displayMsg("Email already exists, please try another email");
-                return null; // stops so there won't be created 2 of the same ac's
+                return null; // Stop so we don't create a duplicate account
             }
         }
 
-        // Creates a new user and adds to the list
+        // Create a new user and add it to the list
         User u = new User(name, mail, code);
         users.add(u);
 
-        // Logss the user in
+        // Confirm to the user
         ui.displayMsg("Account has been created. You are now logged in as " + name + ".");
 
-        return u; // Return user so MainMenu can set currentUser
+        // Return the created user so MainMenu can set currentUser
+        return u;
     }
 
+    // Loads all users from a CSV file into the provided list
+    public static void loadUsersFromFile(FileIO io,
+                                         String userFilePath,
+                                         ArrayList<User> users,
+                                         UIText ui) {
 
+        users.clear(); // Remove any users currently in memory
 
+        // Read all lines from the file
+        ArrayList<String> lines = io.readData(userFilePath);
 
+        // Each line is split into parts: name;mail;code
+        for (String line : lines) {
+            String[] p = line.split(";");
+            if (p.length >= 3) { // Make sure we have all 3 fields
+                users.add(new User(p[0], p[1], p[2]));
+            }
+        }
+
+        // Feedback to the user
+        if (users.isEmpty()) {
+            ui.displayMsg("No users found in file.");
+        } else {
+            ui.displayMsg("Users loaded from file:");
+            for (User u : users) {
+                ui.displayMsg(" - " + u.getName() + " (" + u.getMail() + ")");
+            }
+        }
+    }
+
+    // Saves all users in memory to the users CSV file
+    public static void saveUsersToFile(FileIO io,
+                                       String userFilePath,
+                                       ArrayList<User> users) {
+
+        ArrayList<String> lines = new ArrayList<>();
+
+        // Convert each user object into a CSV line: name;mail;code
+        for (User u : users) {
+            lines.add(u.getName() + ";" + u.getMail() + ";" + u.getCode());
+        }
+
+        // Use FileIO to write the data to the file
+        io.saveData(lines, userFilePath, "name;mail;code");
+    }
 }

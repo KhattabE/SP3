@@ -1,0 +1,115 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Main {
+    +static void main(String[] args)
+}
+
+class MainMenu {
+    -String userFilePath
+    -String movieFilePath
+    -String seriesFilePath
+    -String savedMediaFilePath
+    -String seenMediaFilePath
+
+    -ArrayList<Movie> movieList
+    -ArrayList<Series> seriesList
+    -ArrayList<User> users
+    -ArrayList<Media> savedList
+    -ArrayList<Media> seenList
+
+    -User currentUser
+
+    +MainMenu(String userFilePath, String movieFilePath, String seriesFilePath)
+    +void show()
+    +void showUserMenu()
+    +void loadUsersFromFile()
+    +void loadMoviesFromFile()
+    +void loadSeriesFromFile()
+    +void loadSavedMediaFromFile()
+    +void loadSeenMediaFromFile()
+}
+
+package util {
+    class UIText {
+        +void displayMsg(String)
+        +int promptNumeric(String)
+        +String promptText(String)
+        +boolean promptBinary(String)
+    }
+
+    class FileIO {
+        +void saveData(ArrayList<String>, String, String)
+        +ArrayList<String> readData(String)
+    }
+}
+
+abstract class Media {
+    -String title
+    -ArrayList<String> genres
+    -int releaseYear
+    -double rating
+
+    +String getTitle()
+    +ArrayList<String> getGenres()
+    +int getReleaseYear()
+    +double getRating()
+    +boolean matchesGenre(String)
+    +void displayInfo()
+    +void play(UIText)
+    +abstract String getType()
+
+    +static void searchAfterMedia(UIText, ArrayList<Movie>, ArrayList<Series>)
+    +static void saveMedia(UIText, ArrayList<Movie>, ArrayList<Series>, ArrayList<Media>)
+}
+
+class Movie {
+    -double movieLength
+
+    +Movie(String, ArrayList<String>, int, double, UIText, double)
+    +String getType()
+    +void displayInfo()
+    +static void chooseMovieFromList(UIText, ArrayList<Movie>, ArrayList<Media>)
+    +static void loadMoviesFromFile(util.FileIO, String, ArrayList<Movie>, UIText)
+}
+
+class Series {
+    -int seasons
+    -int episodes
+    -int episodeLength
+
+    +Series(String, ArrayList<String>, int, double, int, int, int)
+    +String getType()
+    +void displayInfo()
+    +static void chooseSeriesFromList(UIText, ArrayList<Series>, ArrayList<Media>)
+    +static void loadSeriesFromFile(util.FileIO, String, ArrayList<Series>, UIText)
+}
+
+class User {
+    -String name
+    -String mail
+    -String code
+
+    +User(String, String, String)
+    +String getName()
+    +String getMail()
+    +String getCode()
+    +static boolean isValidMail(String)
+    +static User login(UIText, ArrayList<User>)
+    +static User createAccount(UIText, ArrayList<User>)
+    +static void loadUsersFromFile(util.FileIO, String, ArrayList<User>, UIText)
+    +static void saveUsersToFile(util.FileIO, String, ArrayList<User>)
+}
+
+Media <|-- Movie
+Media <|-- Series
+
+Main --> MainMenu
+
+MainMenu o-- User
+MainMenu o-- Movie
+MainMenu o-- Series
+MainMenu o-- UIText
+MainMenu o-- FileIO
+
+@enduml
